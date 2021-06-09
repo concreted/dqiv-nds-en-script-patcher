@@ -14,8 +14,10 @@
 
 ## Approach
 
-- Seek until we find a `@a@b` start boundary. Write all bytes until the start boundary to the output file as-is.
+- Seek until we find a `@a` start boundary. Write all bytes until the start boundary to the output file as-is.
+- Next, seek until we find a `@b` nametag end boundary. Everything between `@a` and `@b` is the speaker name of the dialogue segment.
 - Seek to `@c2@` end boundary. Determine length of segment.
+
 - Remove each `%0` and add equal number of empty spaces at end of segment.
 - Change each plural-variable block e.g. `%H***%Xyou%Yyouse%Z` to plural equivalent, padding end with spaces.
     - Always pick the latter of the two options

@@ -3,19 +3,31 @@ import os, shutil
 def main():
     print("Patching directory 'en', writing results to 'out'")
     
-    shutil.rmtree("out")
+    shutil.rmtree("out", ignore_errors=True)
     os.mkdir("out")
+    os.mkdir("out/en")
 
     patch_file_en("b0200000.mpt")
 
 # Process a single "segment" of dialogue.
 # The resulting segment should be the exact same length as the original segment.
 def process_segment(segment):
-    return segment
+    size = len(segment)
+    # Strip all %0 control characters.
+    s = segment.replace(b'%0', b'')
+
+    processed_segment = bytearray(s)
+    print(processed_segment)
+    while len(processed_segment) < size:
+        processed_segment.extend(b' ')
+
+    assert len(processed_segment) == size, f"ERROR: Processed segment size ({len(processed_segment)}) does not match original size ({size})"
+
+    return processed_segment
 
 def patch_file_en(filename):
     print(f'Patching file en/{filename}')
-    with open(f'en/{filename}', "rb") as in_file, open (f'out/{filename}', "wb") as out_file:
+    with open(f'en/{filename}', "rb") as in_file, open (f'out/en/{filename}', "wb") as out_file:
         data = in_file.read()
         size = len(data)
 
@@ -86,7 +98,7 @@ def patch_file_en(filename):
 
         out_file.write(final_data)
 
-        assert len(final_data) == size, f"ERROR: Final size ({len(final_data)}) does not match original size ({size})"
+        assert len(final_data) == size, f"Final size ({len(final_data)}) does not match original size ({size})"
 
 if __name__ == "__main__":
     main()
