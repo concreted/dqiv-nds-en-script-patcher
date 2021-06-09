@@ -1,18 +1,26 @@
-import os, shutil, sys
+import os, shutil, sys, argparse
 
 mode_gender = 'n'
 mode_lang = 'en'
 
 def main():
+    parser = argparse.ArgumentParser(description='Patch English script files for JP Dragon Quest VI ROM.')
+    parser.add_argument('--file', help='file to be patched', default=None)
     print("Patching directory 'en', writing results to 'out'")
+
+    args = parser.parse_args()
+    print(args.file)
     
     shutil.rmtree("out", ignore_errors=True)
     os.mkdir("out")
     os.mkdir(f"out/{mode_lang}")
 
-    files = os.listdir('en')
-    for file in files:
-        patch_file_en(file)
+    if args.file is not None:
+        patch_file_en(args.file)
+    else:
+        files = os.listdir('en')
+        for file in files:
+            patch_file_en('file')
 
     # Prologue
     # patch_file_en("b0200000.mpt")
@@ -292,8 +300,8 @@ def special_case_patch(filename, data):
     return patched_data, patched
 
 def patch_file_en(filename):
-    print(f'Patching file en/{filename}')
-    with open(f'en/{filename}', "rb") as in_file, open (f'out/en/{filename}', "wb") as out_file:
+    print(f'Patching file {filename}')
+    with open(f'en/{filename}', "rb") as in_file, open (f'out/{mode_lang}/{filename}', "wb") as out_file:
         data = in_file.read()
         size = len(data)
 
