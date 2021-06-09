@@ -1,11 +1,14 @@
-import os, shutil
+import os, shutil, sys
+
+mode_gender = 'n'
+mode_lang = 'en'
 
 def main():
     print("Patching directory 'en', writing results to 'out'")
     
     shutil.rmtree("out", ignore_errors=True)
     os.mkdir("out")
-    os.mkdir("out/en")
+    os.mkdir(f"out/{mode_lang}")
 
     # patch_file_en("b0200000.mpt")
 
@@ -14,6 +17,9 @@ def main():
 
     # Nested
     patch_file_en("b0802000.mpt")
+
+    # Party-specific
+    patch_file_en("b0018000.mpt")
 
 def is_control_char(bytes):
     return bytes == b'%H' or bytes == b'%M' or bytes == b'%O' or bytes == b'%A'
@@ -40,8 +46,24 @@ def replace_control_segment(control_char, options):
     elif control_char == b'%O':
         return options[0]
     elif control_char == b'%A':
-        return bytearray('/', 'utf-8').join(options)
+        if mode_gender == 'b':
+            return bytearray('/', 'utf-8').join(options)
+        elif mode_gender == 'm':
+            return options[0]
+        elif mode_gender == 'f':
+            if len(options) > 1:
+                return options[1]
+            return options[0]
 
+        # Rule-based replacement
+        if len(options) == 1:
+            return options[0]
+        else:
+            if options[0] == b'his':
+                return b'their'
+            
+            print(f'WARNING: Unhandled gender replacement, falling back to first: {options[0]}')
+            return options[0]
     raise
 
 def reduce_control_segment(segment):
