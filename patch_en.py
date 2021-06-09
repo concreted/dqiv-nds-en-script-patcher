@@ -26,6 +26,9 @@ def main():
     # Party-specific
     # patch_file_en("b0018000.mpt")
 
+    # Chapter titles (special case)
+    # patch_file_en("b1007000.mpt")
+
 def is_control_char(bytes):
     return bytes == b'%H' or bytes == b'%M' or bytes == b'%O' or bytes == b'%A'
 
@@ -270,6 +273,17 @@ def process_segment(segment):
 
     return processed_segment
 
+def special_case_patch(filename, data):
+    patched_data = data
+    patched = False
+    if filename == 'b1007000.mpt':
+        patched_data = patched_data.replace(b'@1Chapter 1: Ragnar McRyan and the Case of the Missing Children@', b'@1Chapter 1: Ragnar McRyan\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE@')
+        patched_data = patched_data.replace(b'@1Chapter 2: Alena and the Journey to the Tourney@', b'@1Chapter 2: Alena\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE@')
+        patched_data = patched_data.replace(b'@1Chapter 3: Torneko and the Extravagant Excavation@', b'@1Chapter 3: Torneko\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE@')
+        patched_data = patched_data.replace(b'@1Chapter 4: Meena and Maya and the Mahabala Mystery@', b'@1Chapter 4: Meena and Maya\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE@')
+        patched = True
+    return patched_data, patched
+
 def patch_file_en(filename):
     print(f'Patching file en/{filename}')
     with open(f'en/{filename}', "rb") as in_file, open (f'out/en/{filename}', "wb") as out_file:
@@ -277,6 +291,13 @@ def patch_file_en(filename):
         size = len(data)
 
         print(f'Size: {size} bytes')
+
+        data, patched = special_case_patch(filename, data)
+        if (patched):
+            out_file.write(data)
+            assert len(data) == size, f"Final size ({len(data)}) does not match original size ({size})"
+            print(f'Successfully applied special case patch file en/{filename}')
+            return
 
         final_data = bytearray("", 'utf-8')
 

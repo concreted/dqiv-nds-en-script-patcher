@@ -2,8 +2,8 @@
 
 ## Prerequisites
 
-- From Nintendo DS US DQIV ROM: English `.mpt`. files located in `data\data\MESS\en`
-- From Android DQIV OBB: English Party Chat `.mpt` files `b0500000.mpt` to `b0552000.mpt` (46 files in total), located in `com.square_enix.android_googleplay.dq4\main.11100.com.square_enix.android_googleplay.dq4.obb\assets\msg\en`
+- From Nintendo DS US DQIV ROM: English `.mpt`. files located in `data\data\MESS\en` (153 files total)
+- From Android DQIV OBB: English Party Chat `.mpt` files `b0500000.mpt` to `b0552000.mpt` (46 files total), located in `com.square_enix.android_googleplay.dq4\main.11100.com.square_enix.android_googleplay.dq4.obb\assets\msg\en`
 
 ## Guide
 
