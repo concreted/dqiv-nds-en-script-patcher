@@ -10,16 +10,21 @@ def main():
     os.mkdir("out")
     os.mkdir(f"out/{mode_lang}")
 
-    patch_file_en("b0200000.mpt")
+    files = os.listdir('en')
+    for file in files:
+        patch_file_en(file)
+
+    # Prologue
+    # patch_file_en("b0200000.mpt")
 
     # Plurals
-    patch_file_en("b0803000.mpt")
+    # patch_file_en("b0803000.mpt")
 
     # Nested
-    patch_file_en("b0802000.mpt")
+    # patch_file_en("b0802000.mpt")
 
     # Party-specific
-    patch_file_en("b0018000.mpt")
+    # patch_file_en("b0018000.mpt")
 
 def is_control_char(bytes):
     return bytes == b'%H' or bytes == b'%M' or bytes == b'%O' or bytes == b'%A'
@@ -62,6 +67,7 @@ def replace_control_segment(control_char, options):
 
         # Rule-based replacement
         if len(options) == 1:
+            print(f'**** WARNING ****: Gender block has only one choice: {options[0]}')
             return options[0]
         else:
             if options[0] == b'his':
@@ -84,12 +90,12 @@ def replace_control_segment(control_char, options):
                 return b'one'
             if options[0] == b'monsieur':
                 return b'friend'
+            if options[0] == b'son':
+                return b'young one'
             if options[0] == b'o mighty hero':
                 return b'o mighty warrior'
             if options[0].find(b'guy') >= 0:
                 return b'person'
-            if options[0] == b'son' >= 0:
-                return b'young one'
             if options[0].find(b'sir') >= 0:
                 return b'friend'
             if options[0].find(b'boy') >= 0:
@@ -198,6 +204,12 @@ def process_control_chars(segment):
 
     return processed_segment
 
+def fix_grammar(segment):
+    fixed_segment = segment
+    fixed_segment = fixed_segment.replace(b"they's", b"they are")
+    fixed_segment = fixed_segment.replace(b"What luck!", b"Found")
+    return bytearray(fixed_segment)
+
 def reflow_segment(segment):
     # Check if we need to reflow at all. If not, return the original segment.
     needs_reflow = False
@@ -244,13 +256,13 @@ def process_segment(segment):
     processed_segment = process_control_chars(segment)
 
     # Fix grammar issues caused by replacements.
-    # TODO
+    processed_segment = fix_grammar(processed_segment)
 
     # Re-layout lines with max 42-char lines.
     processed_segment = reflow_segment(processed_segment)
 
     # Pad the processed segment to the same length as the original.
-    print(f'Processed segment: {processed_segment}')
+    print(f'Processed segment: {bytes(processed_segment)}')
     while len(processed_segment) < size:
         processed_segment.extend(b' ')
 
