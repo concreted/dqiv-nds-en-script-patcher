@@ -10,10 +10,10 @@ def main():
     os.mkdir("out")
     os.mkdir(f"out/{mode_lang}")
 
-    # patch_file_en("b0200000.mpt")
+    patch_file_en("b0200000.mpt")
 
     # Plurals
-    # patch_file_en("b0803000.mpt")
+    patch_file_en("b0803000.mpt")
 
     # Nested
     patch_file_en("b0802000.mpt")
@@ -61,8 +61,37 @@ def replace_control_segment(control_char, options):
         else:
             if options[0] == b'his':
                 return b'their'
-            
-            print(f'WARNING: Unhandled gender replacement, falling back to first: {options[0]}')
+            if options[0] == b'he':
+                return b'they'
+            if options[0] == b'man':
+                return b'person'
+            if options[0] == b'him':
+                return b'them'
+            if options[0] == b'himself':
+                return b'themself'
+            if options[0] == b'feen':
+                return b'person' 
+            if options[0] == b'laddie':
+                return b'child'
+            if options[0] == b'his':
+                return b'their'
+            if options[0] == b'gent':
+                return b'one'
+            if options[0] == b'monsieur':
+                return b'friend'
+            if options[0] == b'o mighty hero':
+                return b'o mighty warrior'
+            if options[0].find(b'guy') >= 0:
+                return b'person'
+            if options[0] == b'son' >= 0:
+                return b'young one'
+            if options[0].find(b'sir') >= 0:
+                return b'friend'
+            if options[0].find(b'boy') >= 0:
+                return b'young one'
+            if options[0].find(b'ero') >= 0 and options[1].find(b'eroine') >= 0:
+                return b'warrior'
+            print(f'**** WARNING ****: Unhandled gender replacement, falling back to first: {options[0]}')
             return options[0]
     raise
 
@@ -142,7 +171,7 @@ def reduce_gender_control_segment(segment):
     # TODO: Implement. Should return the reduced form of the control segment. 
     # print(f'***Found gender control segment: {control_segment}***')
     # print(f'***Reduced gender control segment: {reduced_control_segment}***')
-    # print(f'Gender options: {options}')
+    print(f'Gender options: {options}')
 
     return reduced_control_segment, control_segment
 

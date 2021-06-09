@@ -28,25 +28,20 @@
     - There are some `%A180%Xhim%Z%B180%Xher%Z%C180%Xit%Z` cases. 
     - If no matching rule is found or only one option, warn and default to first item.
     - Rules:
-        - *ero/*eroine to warrior
-        - *boy/*lady to you
-        - *guy/*girl to person
-        - man/woman to person
+        - his/her/its to their
         - he/she/* to they
-        - his/her to their
-        - him/her to them
-        - sir/ma'am to friend
-        - sir/miss to friend
-        - monsieur/mademoiselle to friend
-        - son/girl to `young one`
-        - boy/girl to `young one`
-        - *sir/*lady to one
+        - man/woman to person
+        - him/her/it to them
         - feen/wan to person
         - laddie/lassie to child
-        - his/her/its to their
-        - him/her/it to them
         - gent/wench to one
         - himself/herself/itself to themself
+        - son/girl to `young one`
+        - *sir/*lady to friend
+        - *boy/*lady to `young one`
+        - *ero/*eroine to warrior
+        - *guy/*girl to person
+        - monsieur/mademoiselle to friend
 - Fix grammar issues caused by replacements
     - Rules:
         - `they's` to `they are`
