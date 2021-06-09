@@ -21,10 +21,13 @@ def is_control_char(bytes):
 def is_regular_control_char(bytes):
     return bytes == b'%H' or bytes == b'%M' or bytes == b'%O'
 
+def is_regular_secondary_control_char(bytes):
+    return bytes == b'%Y'
+
 def is_gender_control_char(bytes):
     return bytes == b'%A'
 
-def is_secondary_control_char(bytes):
+def is_gender_secondary_control_char(bytes):
     return bytes == b'%B' or bytes == b'%C' 
 
 def reduce_control_segment(segment):
@@ -42,24 +45,35 @@ def reduce_regular_control_segment(segment):
     pointer = 0
     # Control segment starts appear to always be 7 bytes
     pointer = pointer + 7
+
+    options = [bytearray("", 'utf-8')]
+    options_index = 0
+
     while pointer < size:
         if is_control_char(segment[pointer:pointer+2]):
             rcs, cs = reduce_control_segment(segment[pointer:])
             reduced_control_segment.extend(rcs)
             pointer += len(cs)
+        elif is_regular_secondary_control_char(segment[pointer:pointer+2]):
+            options.append(bytearray("", 'utf-8'))
+            options_index += 1
+
+            pointer += 2
         elif segment[pointer:pointer+2] == b'%Z':
-            reduced_control_segment.extend(segment[pointer:pointer+2])
             pointer += 2
             break
         else:
-            reduced_control_segment.append(segment[pointer])
+            options[options_index].append(segment[pointer])
+
+            reduced_control_segment.append(segment[pointer]) 
+
             pointer += 1
     control_segment = segment[0:pointer]
 
     # TODO: Implement. Should return the reduced form of the control segment. 
-    reduced_control_segment = control_segment
     print(f'***Found control segment: {control_segment}***')
     print(f'***Reduced control segment: {reduced_control_segment}***')
+    print(f'Regular options: {options}')
 
     return reduced_control_segment, control_segment
 
@@ -79,28 +93,26 @@ def reduce_gender_control_segment(segment):
             rcs, cs = reduce_control_segment(segment[pointer:])
             reduced_control_segment.extend(rcs)
             pointer += len(cs)
-        elif is_secondary_control_char(segment[pointer:pointer+2]):
+        elif is_gender_secondary_control_char(segment[pointer:pointer+2]):
             options.append(bytearray("", 'utf-8'))
             options_index += 1
 
-            reduced_control_segment.extend(segment[pointer:pointer+2])
             pointer += 7
         elif segment[pointer:pointer+2] == b'%Z':
-            reduced_control_segment.extend(segment[pointer:pointer+2])
             pointer += 2
-
             # Check if we have any further gender options after this one.
             # If not, we can end.
-            if not is_secondary_control_char(segment[pointer:pointer+2]):
+            if not is_gender_secondary_control_char(segment[pointer:pointer+2]):
                 break
         else:
             options[options_index].append(segment[pointer])
-            reduced_control_segment.append(segment[pointer])
+
+            reduced_control_segment.append(segment[pointer]) 
+            
             pointer += 1
     control_segment = segment[0:pointer]
 
     # TODO: Implement. Should return the reduced form of the control segment. 
-    reduced_control_segment = control_segment
     print(f'***Found control segment: {control_segment}***')
     print(f'***Reduced control segment: {reduced_control_segment}***')
     print(f'Gender options: {options}')
@@ -148,7 +160,7 @@ def process_segment(segment):
     # Re-layout lines with max 42-char lines.
 
     # Pad the processed segment to the same length as the original.
-    print(processed_segment)
+    print(f'Processed segment: {processed_segment}')
     while len(processed_segment) < size:
         processed_segment.extend(b' ')
 
