@@ -28,7 +28,21 @@ def is_gender_control_char(bytes):
     return bytes == b'%A'
 
 def is_gender_secondary_control_char(bytes):
-    return bytes == b'%B' or bytes == b'%C' 
+    return bytes == b'%B' or bytes == b'%C'
+
+def replace_control_segment(control_char, options):
+    assert is_control_char(control_char), f'Attempted to replace non-control-char: {control_char}'
+
+    if control_char == b'%H':
+        return options[len(options)-1]
+    elif control_char == b'%M':
+        return options[len(options)-1]
+    elif control_char == b'%O':
+        return options[0]
+    elif control_char == b'%A':
+        return bytearray('/', 'utf-8').join(options)
+
+    raise
 
 def reduce_control_segment(segment):
     is_regular = is_regular_control_char(segment[0:2])
@@ -40,7 +54,6 @@ def reduce_control_segment(segment):
 
 def reduce_regular_control_segment(segment):
     size = len(segment)
-    reduced_control_segment = bytearray("", 'utf-8')
 
     pointer = 0
     # Control segment starts appear to always be 7 bytes
@@ -52,34 +65,29 @@ def reduce_regular_control_segment(segment):
     while pointer < size:
         if is_control_char(segment[pointer:pointer+2]):
             rcs, cs = reduce_control_segment(segment[pointer:])
-            reduced_control_segment.extend(rcs)
             pointer += len(cs)
         elif is_regular_secondary_control_char(segment[pointer:pointer+2]):
             options.append(bytearray("", 'utf-8'))
             options_index += 1
-
             pointer += 2
         elif segment[pointer:pointer+2] == b'%Z':
             pointer += 2
             break
         else:
             options[options_index].append(segment[pointer])
-
-            reduced_control_segment.append(segment[pointer]) 
-
             pointer += 1
-    control_segment = segment[0:pointer]
 
-    # TODO: Implement. Should return the reduced form of the control segment. 
-    print(f'***Found control segment: {control_segment}***')
-    print(f'***Reduced control segment: {reduced_control_segment}***')
-    print(f'Regular options: {options}')
+    control_segment = segment[0:pointer]
+    reduced_control_segment = replace_control_segment(segment[0:2], options)
+
+    # print(f'***Found control segment: {control_segment}***')
+    # print(f'***Reduced control segment: {reduced_control_segment}***')
+    # print(f'Regular options: {options}')
 
     return reduced_control_segment, control_segment
 
 def reduce_gender_control_segment(segment):
     size = len(segment)
-    reduced_control_segment = bytearray("", 'utf-8')
 
     pointer = 0
     # Control segment starts appear to always be 7 bytes
@@ -91,12 +99,10 @@ def reduce_gender_control_segment(segment):
     while pointer < size:
         if is_control_char(segment[pointer:pointer+2]):
             rcs, cs = reduce_control_segment(segment[pointer:])
-            reduced_control_segment.extend(rcs)
             pointer += len(cs)
         elif is_gender_secondary_control_char(segment[pointer:pointer+2]):
             options.append(bytearray("", 'utf-8'))
             options_index += 1
-
             pointer += 7
         elif segment[pointer:pointer+2] == b'%Z':
             pointer += 2
@@ -106,16 +112,15 @@ def reduce_gender_control_segment(segment):
                 break
         else:
             options[options_index].append(segment[pointer])
-
-            reduced_control_segment.append(segment[pointer]) 
-            
             pointer += 1
+
     control_segment = segment[0:pointer]
+    reduced_control_segment = replace_control_segment(segment[0:2], options)
 
     # TODO: Implement. Should return the reduced form of the control segment. 
-    print(f'***Found control segment: {control_segment}***')
-    print(f'***Reduced control segment: {reduced_control_segment}***')
-    print(f'Gender options: {options}')
+    # print(f'***Found gender control segment: {control_segment}***')
+    # print(f'***Reduced gender control segment: {reduced_control_segment}***')
+    # print(f'Gender options: {options}')
 
     return reduced_control_segment, control_segment
 
@@ -143,7 +148,7 @@ def process_segment(segment):
     size = len(segment)
 
     # Strip all %0 control characters.
-    # segment = segment.replace(b'%0', b'')
+    segment = segment.replace(b'%0', b'')
 
     processed_segment = process_control_chars(segment)
 
