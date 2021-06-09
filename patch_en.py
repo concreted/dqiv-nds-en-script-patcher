@@ -16,12 +16,26 @@ def main():
     patch_file_en("b0802000.mpt")
 
 def is_control_char(bytes):
-    return bytes == b'%H' or bytes == b'%M' or bytes == b'%O' or bytes == b'%A' or bytes == b'%B' or bytes == b'%C' 
+    return bytes == b'%H' or bytes == b'%M' or bytes == b'%O' or bytes == b'%A'
+
+def is_regular_control_char(bytes):
+    return bytes == b'%H' or bytes == b'%M' or bytes == b'%O'
 
 def is_gender_control_char(bytes):
-    return bytes == b'%A' or bytes == b'%B' or bytes == b'%C' 
+    return bytes == b'%A'
+
+def is_secondary_control_char(bytes):
+    return bytes == b'%B' or bytes == b'%C' 
 
 def reduce_control_segment(segment):
+    is_regular = is_regular_control_char(segment[0:2])
+    is_gender = is_gender_control_char(segment[0:2])
+    assert is_regular or is_gender, f'Attempted to reduce non-control segment: {segment}'
+    if is_gender:
+        return reduce_gender_control_segment(segment)
+    return reduce_regular_control_segment(segment)
+
+def reduce_regular_control_segment(segment):
     size = len(segment)
     reduced_control_segment = bytearray("", 'utf-8')
 
@@ -46,6 +60,50 @@ def reduce_control_segment(segment):
     reduced_control_segment = control_segment
     print(f'***Found control segment: {control_segment}***')
     print(f'***Reduced control segment: {reduced_control_segment}***')
+
+    return reduced_control_segment, control_segment
+
+def reduce_gender_control_segment(segment):
+    size = len(segment)
+    reduced_control_segment = bytearray("", 'utf-8')
+
+    pointer = 0
+    # Control segment starts appear to always be 7 bytes
+    pointer = pointer + 7
+
+    options = [bytearray("", 'utf-8')]
+    options_index = 0
+
+    while pointer < size:
+        if is_control_char(segment[pointer:pointer+2]):
+            rcs, cs = reduce_control_segment(segment[pointer:])
+            reduced_control_segment.extend(rcs)
+            pointer += len(cs)
+        elif is_secondary_control_char(segment[pointer:pointer+2]):
+            options.append(bytearray("", 'utf-8'))
+            options_index += 1
+
+            reduced_control_segment.extend(segment[pointer:pointer+2])
+            pointer += 7
+        elif segment[pointer:pointer+2] == b'%Z':
+            reduced_control_segment.extend(segment[pointer:pointer+2])
+            pointer += 2
+
+            # Check if we have any further gender options after this one.
+            # If not, we can end.
+            if not is_secondary_control_char(segment[pointer:pointer+2]):
+                break
+        else:
+            options[options_index].append(segment[pointer])
+            reduced_control_segment.append(segment[pointer])
+            pointer += 1
+    control_segment = segment[0:pointer]
+
+    # TODO: Implement. Should return the reduced form of the control segment. 
+    reduced_control_segment = control_segment
+    print(f'***Found control segment: {control_segment}***')
+    print(f'***Reduced control segment: {reduced_control_segment}***')
+    print(f'Gender options: {options}')
 
     return reduced_control_segment, control_segment
 
