@@ -22,8 +22,32 @@ def is_gender_control_char(bytes):
     return bytes == b'%A' or bytes == b'%B' or bytes == b'%C' 
 
 def reduce_control_segment(segment):
+    size = len(segment)
+    reduced_control_segment = bytearray("", 'utf-8')
+
+    pointer = 0
+    # Control segment starts appear to always be 7 bytes
+    pointer = pointer + 7
+    while pointer < size:
+        if is_control_char(segment[pointer:pointer+2]):
+            rcs, cs = reduce_control_segment(segment[pointer:])
+            reduced_control_segment.extend(rcs)
+            pointer += len(cs)
+        elif segment[pointer:pointer+2] == b'%Z':
+            reduced_control_segment.extend(segment[pointer:pointer+2])
+            pointer += 2
+            break
+        else:
+            reduced_control_segment.append(segment[pointer])
+            pointer += 1
+    control_segment = segment[0:pointer]
+
     # TODO: Implement. Should return the reduced form of the control segment. 
-    return segment
+    reduced_control_segment = control_segment
+    print(f'***Found control segment: {control_segment}***')
+    print(f'***Reduced control segment: {reduced_control_segment}***')
+
+    return reduced_control_segment, control_segment
 
 def process_control_chars(segment):
     size = len(segment)
@@ -33,26 +57,9 @@ def process_control_chars(segment):
     pointer = 0
     while pointer < size:
         if is_control_char(segment[pointer:pointer+2]):
-            control_segment_start = pointer
-            nest_count = 1
-            # Control segment starts appear to always be 7 bytes
-            pointer = pointer + 7
-            while pointer < size:
-                if is_control_char(segment[pointer:pointer+2]):
-                    nest_count += 1
-                    pointer += 2
-                elif segment[pointer:pointer+2] == b'%Z':
-                    nest_count -= 1
-                    pointer += 2
-
-                    if nest_count == 0:
-                        break
-                else:
-                    pointer += 1
-            control_segment = segment[control_segment_start:pointer]
-            print(f'***Found control segment: {control_segment}***')
-            reduced_control_segment = reduce_control_segment(control_segment)
+            reduced_control_segment, control_segment = reduce_control_segment(segment[pointer:])
             processed_segment.extend(reduced_control_segment)
+            pointer += len(control_segment)
         else:
             # Write the current byte as-is
             processed_segment.append(segment[pointer])
@@ -165,6 +172,8 @@ def patch_file_en(filename):
         out_file.write(final_data)
 
         assert len(final_data) == size, f"Final size ({len(final_data)}) does not match original size ({size})"
+
+        print(f'Successfully patched file en/{filename}')
 
 if __name__ == "__main__":
     main()
