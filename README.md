@@ -9,6 +9,8 @@
 
 1. Copy NDS US ROM `.mpt` files to the `en` directory in this repo root
 1. Copy Android OBB party chat `.mpt` files to the `en` directory
+1. Run `python patch_en.py`
+1. Find output files in `out` directory. Place those files into a JP ROM of Dragon Quest IV and repack. 
 
 ## Approach
 
