@@ -9,7 +9,6 @@ def main():
     print("Patching directory 'en', writing results to 'out'")
 
     args = parser.parse_args()
-    print(args.file)
     
     shutil.rmtree("out", ignore_errors=True)
     os.mkdir("out")
@@ -20,7 +19,7 @@ def main():
     else:
         files = os.listdir('en')
         for file in files:
-            patch_file_en('file')
+            patch_file_en(f'{file}')
 
     # Prologue
     # patch_file_en("b0200000.mpt")
