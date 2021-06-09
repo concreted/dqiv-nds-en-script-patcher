@@ -26,14 +26,26 @@ def patch_file_en(filename):
         pointer = 0
         segment_start = None
         segment_end = None
+        nametag = b''
         while pointer < size:
             if segment_start == None:
                 # Need to look for a new segment start.
-                if data[pointer:pointer+4] == b'@a@b':
-                    # Write the segment start marker
-                    final_data.extend(b'@a@b')
+                if data[pointer:pointer+2] == b'@a':
+                    # Look for the nametag end marker
+                    pointer = pointer+2
+                    nametag_start = pointer
+                    nametag_len = 0
+                    while data[pointer:pointer+2] != b'@b':
+                        nametag_len += 1
+                        pointer += 1
+                    nametag = data[nametag_start:nametag_start + nametag_len]
 
-                    segment_start = pointer+4
+                    # Write the segment start marker
+                    final_data.extend(b'@a')
+                    final_data.extend(nametag)
+                    final_data.extend(b'@b')
+
+                    segment_start = pointer+2
                 else:
                     # Write any bytes encountered between segments to the output buffer
                     final_data.append(data[pointer])
@@ -41,7 +53,7 @@ def patch_file_en(filename):
                     pointer += 1
             elif segment_end == None:
                 # Need to look for a new segment end.
-                if data[pointer:pointer+4] == b'@c2@' or data[pointer:pointer+4] == b'@c0@':
+                if data[pointer:pointer+4] == b'@c2@' or data[pointer:pointer+4] == b'@c1@' or data[pointer:pointer+4] == b'@c0@':
                     segment_end = pointer
                     pointer = pointer+4
                 else:
@@ -51,7 +63,8 @@ def patch_file_en(filename):
                 segment = data[segment_start:segment_end]
                 segmentSize = len(segment)
 
-                print(f'Processing segment ({segmentSize} bytes): {segment}')
+                nametag_print = f' [{nametag}]' if len(nametag) > 0 else ''
+                print(f'Processing segment ({segmentSize} bytes):{nametag_print} {segment}')
 
                 # Process the segment.
                 processedSegment = process_segment(segment)
@@ -65,12 +78,13 @@ def patch_file_en(filename):
                 # Reset the segment start/end pointers.
                 segment_start = None
                 segment_end = None
+                nametag = b''
 
                 # break
 
         out_file.write(final_data)
 
-        assert(len(final_data) == size, f"ERROR: Final size ({len(final_data)}) does not match original size ({size})")
+        assert len(final_data) == size, f"ERROR: Final size ({len(final_data)}) does not match original size ({size})"
 
 if __name__ == "__main__":
     main()
