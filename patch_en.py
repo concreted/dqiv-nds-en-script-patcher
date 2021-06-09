@@ -40,12 +40,17 @@ def replace_control_segment(control_char, options):
     assert is_control_char(control_char), f'Attempted to replace non-control-char: {control_char}'
 
     if control_char == b'%H':
+        # Rewrite %H***%X<singular>%Y<plural>%Z blocks. Use the plural variant for these blocks.
         return options[len(options)-1]
     elif control_char == b'%M':
+        # Rewrite %M***%X<plural>%Y<singular>%Z blocks. Use the singular variant for these blocks.
         return options[len(options)-1]
     elif control_char == b'%O':
+        # Rewrite %O***%X<leader>%Y<specific party member>%Z blocks. Use the first variant.
         return options[0]
     elif control_char == b'%A':
+        # Rewrite %A***%X<masculine>%Z%B***%X<feminine>%Z%C***%X<non-gendered>%Z blocks 
+        # using specific gender mode or rule-based replacement.
         if mode_gender == 'b':
             return bytearray('/', 'utf-8').join(options)
         elif mode_gender == 'm':
@@ -193,6 +198,41 @@ def process_control_chars(segment):
 
     return processed_segment
 
+def reflow_segment(segment):
+    # Check if we need to reflow at all. If not, return the original segment.
+    needs_reflow = False
+    lines = segment.split(b'\n')
+    for line in lines:
+        if len(line) > 42:
+            needs_reflow = True
+            break
+    if not needs_reflow:
+        return bytearray(segment)
+
+    # Convert all newlines to spaces.
+    reflowed_segment = bytearray(segment.replace(b'\n', b' '))
+
+    # Break segment into lines of max 42 chars.
+    size = len(segment)
+    pointer = 0
+    current_line_size = 0
+    last_space_index = None
+    while pointer < size:
+        if reflowed_segment[pointer] == ord(' '):
+            last_space_index = pointer
+        if current_line_size > 42 and last_space_index is not None:
+            reflowed_segment[last_space_index] = ord('\n')
+            last_space_index = None
+            current_line_size = 0
+        else:
+            current_line_size += 1 
+        pointer += 1
+
+    if reflowed_segment[size-1] == ord(' '):
+        reflowed_segment[size-1] = ord('\n')
+
+    return reflowed_segment
+
 # Process a single "segment" of dialogue.
 # The resulting segment should be the exact same length as the original segment.
 def process_segment(segment):
@@ -203,17 +243,11 @@ def process_segment(segment):
 
     processed_segment = process_control_chars(segment)
 
-    # Rewrite %H***%X<singular>%Y<plural>%Z blocks. Use the plural variant for these blocks.
-
-    # Rewrite %M***%X<plural>%Y<singular>%Z blocks. Use the singular variant for these blocks.
-
-    # Rewrite %O***%X<leader>%Y<specific party member>%Z blocks. Use the first variant.
-
-    # Rewrite %A***%X<masculine>%Z%B***%X<feminine>%Z%C***%X<non-gendered>%Z blocks using rule-based replacement.
-
     # Fix grammar issues caused by replacements.
+    # TODO
 
     # Re-layout lines with max 42-char lines.
+    processed_segment = reflow_segment(processed_segment)
 
     # Pad the processed segment to the same length as the original.
     print(f'Processed segment: {processed_segment}')
