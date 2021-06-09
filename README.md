@@ -23,7 +23,7 @@
     - Always pick the latter of the two options
 - Change each plural-variable block e.g. `%M***%Xthem%Yit%Z` to singular equivalent, padding end with spaces.
     - Always pick the latter of the two options
-- Change each context-specific block e.g. `%O969%Xthe girls'%Yyour%Z` to the first option.
+- Change each context-specific block e.g. `%O***%Xthe girls'%Yyour%Z` to the first option.
 - Change each gender-variable block e.g. `%A***%Xsir%Z%B090%Xlady%Z` to gender-neutral equivalent, padding end with spaces. 
     - There are some `%A180%Xhim%Z%B180%Xher%Z%C180%Xit%Z` cases. 
     - If no matching rule is found or only one option, warn and default to first item.
@@ -69,4 +69,14 @@ en/b0802000.mpt:@c0@@a@b%0%a02010 mashes up the Yggdrasil leaf and administers i
 Nested variable blocks:
 ```
 %H860%X%0%a02010 bangs %A010%Xhis%Z%B010%Xher%Z%C010%Xits%Z head%YThe party bang their heads%Z
+```
+
+
+```
+(x, (his, hers))
+
+(his, hers)
+
+(his, hers)
+theirs
 ```

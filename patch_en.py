@@ -7,8 +7,58 @@ def main():
     os.mkdir("out")
     os.mkdir("out/en")
 
-    patch_file_en("b0200000.mpt")
+    # patch_file_en("b0200000.mpt")
+
+    # Plurals
     # patch_file_en("b0803000.mpt")
+
+    # Nested
+    patch_file_en("b0802000.mpt")
+
+def is_control_char(bytes):
+    return bytes == b'%H' or bytes == b'%M' or bytes == b'%O' or bytes == b'%A' or bytes == b'%B' or bytes == b'%C' 
+
+def is_gender_control_char(bytes):
+    return bytes == b'%A' or bytes == b'%B' or bytes == b'%C' 
+
+def reduce_control_segment(segment):
+    # TODO: Implement. Should return the reduced form of the control segment. 
+    return segment
+
+def process_control_chars(segment):
+    size = len(segment)
+    # Step through segment 
+    processed_segment = bytearray("", 'utf-8')
+
+    pointer = 0
+    while pointer < size:
+        if is_control_char(segment[pointer:pointer+2]):
+            control_segment_start = pointer
+            nest_count = 1
+            # Control segment starts appear to always be 7 bytes
+            pointer = pointer + 7
+            while pointer < size:
+                if is_control_char(segment[pointer:pointer+2]):
+                    nest_count += 1
+                    pointer += 2
+                elif segment[pointer:pointer+2] == b'%Z':
+                    nest_count -= 1
+                    pointer += 2
+
+                    if nest_count == 0:
+                        break
+                else:
+                    pointer += 1
+            control_segment = segment[control_segment_start:pointer]
+            print(f'***Found control segment: {control_segment}***')
+            reduced_control_segment = reduce_control_segment(control_segment)
+            processed_segment.extend(reduced_control_segment)
+        else:
+            # Write the current byte as-is
+            processed_segment.append(segment[pointer])
+            pointer += 1
+
+    return processed_segment
 
 # Process a single "segment" of dialogue.
 # The resulting segment should be the exact same length as the original segment.
@@ -16,7 +66,9 @@ def process_segment(segment):
     size = len(segment)
 
     # Strip all %0 control characters.
-    s = segment.replace(b'%0', b'')
+    # segment = segment.replace(b'%0', b'')
+
+    processed_segment = process_control_chars(segment)
 
     # Rewrite %H***%X<singular>%Y<plural>%Z blocks. Use the plural variant for these blocks.
 
@@ -31,7 +83,6 @@ def process_segment(segment):
     # Re-layout lines with max 42-char lines.
 
     # Pad the processed segment to the same length as the original.
-    processed_segment = bytearray(s)
     print(processed_segment)
     while len(processed_segment) < size:
         processed_segment.extend(b' ')
@@ -54,7 +105,7 @@ def patch_file_en(filename):
         segment_start = None
         segment_end = None
         nametag = b''
-        while pointer < size:
+        while pointer <= size:
             if segment_start == None:
                 # Need to look for a new segment start.
                 if data[pointer:pointer+2] == b'@a':
@@ -75,14 +126,14 @@ def patch_file_en(filename):
                     # TODO: Support jp-compatible segments where nametags are inside the regular segment text.
 
                     segment_start = pointer+2
-                else:
+                elif pointer < size:
                     # Write any bytes encountered between segments to the output buffer
                     final_data.append(data[pointer])
 
-                    pointer += 1
+                pointer += 1
             elif segment_end == None:
                 # Need to look for a new segment end.
-                if data[pointer:pointer+4] == b'@c2@' or data[pointer:pointer+4] == b'@c1@' or data[pointer:pointer+4] == b'@c0@':
+                if data[pointer:pointer+4] == b'@c3@' or data[pointer:pointer+4] == b'@c2@' or data[pointer:pointer+4] == b'@c1@' or data[pointer:pointer+4] == b'@c0@':
                     segment_end = pointer
                     pointer = pointer+4
                 else:
