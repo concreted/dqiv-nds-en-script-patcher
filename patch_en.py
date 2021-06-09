@@ -45,6 +45,8 @@ def patch_file_en(filename):
                     final_data.extend(nametag)
                     final_data.extend(b'@b')
 
+                    # TODO: Support jp-compatible segments where nametags are inside the regular segment text.
+
                     segment_start = pointer+2
                 else:
                     # Write any bytes encountered between segments to the output buffer
