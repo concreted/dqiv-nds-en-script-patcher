@@ -25,8 +25,6 @@ def patch_file_en(filename):
             if segmentStart == None:
                 # Need to look for a new segment start.
                 if data[pointer:pointer+4] == b'@a@b':
-                    # print(str(data[pointer:pointer+4])
-                    
                     # Write the segment start marker
                     final_data.extend(b'@a@b')
 
@@ -38,28 +36,38 @@ def patch_file_en(filename):
                     pointer += 1
             elif segmentEnd == None:
                 # Need to look for a new segment end.
-                if data[pointer:pointer+4] == b'@c2@':
+                if data[pointer:pointer+4] == b'@c2@' or data[pointer:pointer+4] == b'@c0@':
                     segmentEnd = pointer
                     pointer = pointer+4
                 else:
                     pointer += 1
             else:
                 # We have a start and end to the segment.
-                # Process the segment.
                 segment = data[segmentStart:segmentEnd]
                 segmentSize = len(segment)
-                print(f'Processing segment ({segmentSize}): {segment}')
+
+                print(f'Processing segment ({segmentSize} bytes): {segment}')
+
+                # Process the segment.
+                processedSegment = bytearray("", 'utf-8')
+                
+
+                # Write the processed segment.
+                processedSegment = segment[0:]
+                final_data.extend(processedSegment)
 
                 # Write the segment end marker
-                final_data.extend(b'@c2@')
+                final_data.extend(data[segmentEnd:segmentEnd+4])
 
                 # Reset the segment start/end pointers.
                 segmentStart = None
                 segmentEnd = None
 
-                break
+                # break
 
         out_file.write(final_data)
+
+        assert(len(final_data) == size, f"ERROR: Final size ({len(final_data)}) does not match original size ({size})")
 
 if __name__ == "__main__":
     main()
