@@ -29,6 +29,9 @@ def main():
     # Chapter titles (special case)
     # patch_file_en("b1007000.mpt")
 
+    # Battle text
+    # patch_file_en('b0801000.mpt')
+
 def is_control_char(bytes):
     return bytes == b'%H' or bytes == b'%M' or bytes == b'%O' or bytes == b'%A'
 
@@ -213,12 +216,12 @@ def fix_grammar(segment):
     fixed_segment = fixed_segment.replace(b"What luck!", b"Found")
     return bytearray(fixed_segment)
 
-def reflow_segment(segment):
+def reflow_segment(segment, force=False, reflow_limit=42, newline_end=True):
     # Check if we need to reflow at all. If not, return the original segment.
-    needs_reflow = False
+    needs_reflow = force
     lines = segment.split(b'\n')
     for line in lines:
-        if len(line) > 42:
+        if len(line) > reflow_limit:
             needs_reflow = True
             break
     if not needs_reflow:
@@ -227,7 +230,7 @@ def reflow_segment(segment):
     # Convert all newlines to spaces.
     reflowed_segment = bytearray(segment.replace(b'\n', b' '))
 
-    # Break segment into lines of max 42 chars.
+    # Break segment into lines of max reflow_limit chars.
     size = len(segment)
     pointer = 0
     current_line_size = 0
@@ -235,7 +238,7 @@ def reflow_segment(segment):
     while pointer < size:
         if reflowed_segment[pointer] == ord(' '):
             last_space_index = pointer
-        if current_line_size > 42 and last_space_index is not None:
+        if current_line_size > reflow_limit and last_space_index is not None:
             reflowed_segment[last_space_index] = ord('\n')
             last_space_index = None
             current_line_size = 0
@@ -243,14 +246,15 @@ def reflow_segment(segment):
             current_line_size += 1 
         pointer += 1
 
-    if reflowed_segment[size-1] == ord(' '):
-        reflowed_segment[size-1] = ord('\n')
+    if newline_end:
+        if reflowed_segment[size-1] == ord(' '):
+            reflowed_segment[size-1] = ord('\n')
 
     return reflowed_segment
 
 # Process a single "segment" of dialogue.
 # The resulting segment should be the exact same length as the original segment.
-def process_segment(segment):
+def process_segment(filename, segment):
     size = len(segment)
 
     # Strip all %0 control characters.
@@ -261,8 +265,11 @@ def process_segment(segment):
     # Fix grammar issues caused by replacements.
     processed_segment = fix_grammar(processed_segment)
 
-    # Re-layout lines with max 42-char lines.
-    processed_segment = reflow_segment(processed_segment)
+    # Reflow lines.
+    if (filename == 'b0801000.mpt'):
+        processed_segment = reflow_segment(processed_segment, True, 45, False)
+    else:
+        processed_segment = reflow_segment(processed_segment)
 
     # Pad the processed segment to the same length as the original.
     print(f'Processed segment: {bytes(processed_segment)}')
@@ -347,7 +354,7 @@ def patch_file_en(filename):
                 print(f'Processing segment ({segmentSize} bytes):{nametag_print} {segment}')
 
                 # Process the segment.
-                processedSegment = process_segment(segment)
+                processedSegment = process_segment(filename, segment)
                 
                 # Write the processed segment.
                 final_data.extend(processedSegment)
