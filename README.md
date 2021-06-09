@@ -23,19 +23,50 @@
     - Always pick the latter of the two options
 - Change each plural-variable block e.g. `%M***%Xthem%Yit%Z` to singular equivalent, padding end with spaces.
     - Always pick the latter of the two options
-- Change each gender-variable block e.g. `%A090%Xsir%Z%B090%Xlady%Z` to gender-neutral equivalent, padding end with spaces.
-    - *ero/*eroine to warrior
-    - *boy/*lady to you
-    - *guy/*girl to person
-    - he/she to they
-    - man/woman to person
-    - his/her to their
-    - him/her to their
-    - son/girl to child
-    - boy/girl to child
-    - sir/lady to one
-    - laddie/lassie to child
+- Change each context-specific block e.g. `%O969%Xthe girls'%Yyour%Z` to the first option.
+- Change each gender-variable block e.g. `%A***%Xsir%Z%B090%Xlady%Z` to gender-neutral equivalent, padding end with spaces. 
+    - There are some `%A180%Xhim%Z%B180%Xher%Z%C180%Xit%Z` cases. 
+    - If no matching rule is found or only one option, warn and default to first item.
+    - Rules:
+        - *ero/*eroine to warrior
+        - *boy/*lady to you
+        - *guy/*girl to person
+        - man/woman to person
+        - he/she/* to they
+        - his/her to their
+        - him/her to them
+        - sir/ma'am to friend
+        - sir/miss to friend
+        - monsieur/mademoiselle to friend
+        - son/girl to `young one`
+        - boy/girl to `young one`
+        - *sir/*lady to one
+        - feen/wan to person
+        - laddie/lassie to child
+        - his/her/its to their
+        - him/her/it to them
+        - gent/wench to one
+        - himself/herself/itself to themself
+- Fix grammar issues caused by replacements
+    - Rules:
+        - `they's` to `they are`
 - Re-layout line by first converting all newlines into spaces. Then split segment into max-42 char lines on space boundaries, changing spaces to newlines.
 - Write resulting segment to output file. 
 
 Each resulting file should be same size as the original.
+
+## Known issues
+
+## Edge cases
+
+%N:
+```
+en/b0801000.mpt:@c0@▒▒▒@a@b%0%a02010 mashes up the Yggdrasil leaf and administers it to %N180%X%A010%Xhimself%Z%B010%Xherself%Z%C010%Xitself%Z%Y%a02180%Z.
+en/b0802000.mpt:@c0@@a@b%0%a02010 mashes up the Yggdrasil leaf and administers it to %N180%X%A010%Xhimself%Z%B010%Xherself%Z%C010%Xitself%Z%Y%a02180%Z.
+
+```
+
+Nested variable blocks:
+```
+%H860%X%0%a02010 bangs %A010%Xhis%Z%B010%Xher%Z%C010%Xits%Z head%YThe party bang their heads%Z
+```

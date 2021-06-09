@@ -8,14 +8,29 @@ def main():
     os.mkdir("out/en")
 
     patch_file_en("b0200000.mpt")
+    # patch_file_en("b0803000.mpt")
 
 # Process a single "segment" of dialogue.
 # The resulting segment should be the exact same length as the original segment.
 def process_segment(segment):
     size = len(segment)
+
     # Strip all %0 control characters.
     s = segment.replace(b'%0', b'')
 
+    # Rewrite %H***%X<singular>%Y<plural>%Z blocks. Use the plural variant for these blocks.
+
+    # Rewrite %M***%X<plural>%Y<singular>%Z blocks. Use the singular variant for these blocks.
+
+    # Rewrite %O***%X<leader>%Y<specific party member>%Z blocks. Use the first variant.
+
+    # Rewrite %A***%X<masculine>%Z%B***%X<feminine>%Z%C***%X<non-gendered>%Z blocks using rule-based replacement.
+
+    # Fix grammar issues caused by replacements.
+
+    # Re-layout lines with max 42-char lines.
+
+    # Pad the processed segment to the same length as the original.
     processed_segment = bytearray(s)
     print(processed_segment)
     while len(processed_segment) < size:
