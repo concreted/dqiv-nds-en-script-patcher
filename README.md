@@ -123,7 +123,7 @@ Additionally, we apply a special patch to shorten chapter names in `b1007000.mpt
 - Sometimes garbage characters like `%` may appear, which don't belong to control character segments. This can be caused by certain special characters that aren't handled correctly on the JA ROM. 
 - Since we are forced to pick a single plural/singular substitution, sometimes the text will not have the correct plural/singular word choice.
 - Some text may overflow since the English script doesn't fix into text boxes expected for the JA ROM. Most obvious example is the chapter names on the save/load screen.
-- When ROM language is changed to English, the name selection screen is still in Japanese, but the main character is always referred to as "Solo" in game. This appears to be hardcoded in the JA ROM and I don't know how to fix this.
+- When ROM language is changed to English, the name selection screen is still in Japanese, but the main character is always referred to as "Solo/Sophia" in game. This appears to be hardcoded in the JA ROM and I don't know how to fix this.
 - When ROM language is set to Japanese (default), the game will still use the Japanese name selection screen and save/display the main character name in Japanese. Changing this seems to require changing the ROM code which I don't know how to do.
 - Most item and enemy names are lowercased. The actual item strings are in lowercase, and the code to handle uppercasing them when appropriate doesn't seem to work in the JA ROM.  
 ![Item Text Issue](screenshots/issue_item_text.png)
