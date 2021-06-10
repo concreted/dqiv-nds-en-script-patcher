@@ -1,14 +1,34 @@
-import os, shutil, sys, argparse
+import os, shutil, argparse, logging, sys
+
+logging.basicConfig(format='%(message)s', stream=sys.stdout, level=logging.INFO)
 
 mode_gender = 'n'
 mode_lang = 'en'
 
 def main():
+    global mode_gender
+    global mode_lang
+
     parser = argparse.ArgumentParser(description='Patch English script files for JP Dragon Quest VI ROM.')
-    parser.add_argument('--file', help='file to be patched', default=None)
-    print("Patching directory 'en', writing results to 'out'")
+    parser.add_argument('--file', help='file to be patched. must be present in the ./en directory', default=None)
+    parser.add_argument('--gender', help='[(n)|m|f|b] player character gender. options are neutral, male, female, both', default='n')
+    parser.add_argument('--lang', help='[(en)|ja] rom language mode to target. en uses nametags, ja embeds the speaker name in text', default='en')
+    parser.add_argument('--debug', dest='debug', action='store_true', help='enable debug logs')
 
     args = parser.parse_args()
+
+    if args.gender not in ['n', 'm', 'f', 'b']:
+        logging.error(f'Unsupported --gender: {args.gender}')
+        exit(1)
+    if args.lang not in ['en', 'ja']:
+        logging.error(f'Unsupported --lang: {args.lang}')
+        exit(1)
+    if args.debug:
+        root = logging.getLogger()
+        root.setLevel(logging.DEBUG)
+    mode_gender = args.gender
+    mode_lang = args.lang
+    logging.info(f"Patching directory en, writing results to 'out/{mode_lang}'")
     
     shutil.rmtree("out", ignore_errors=True)
     os.mkdir("out")
@@ -80,7 +100,7 @@ def replace_control_segment(control_char, options):
 
         # Rule-based replacement
         if len(options) == 1:
-            print(f'**** WARNING ****: Gender block has only one choice: {options[0]}')
+            logging.warning(f'**** WARNING ****: Gender block has only one choice: {options[0]}')
             return options[0]
         else:
             if options[0] == b'his':
@@ -115,7 +135,7 @@ def replace_control_segment(control_char, options):
                 return b'young one'
             if options[0].find(b'ero') >= 0 and options[1].find(b'eroine') >= 0:
                 return b'warrior'
-            print(f'**** WARNING ****: Unhandled gender replacement, falling back to first: {options[0]}')
+            logging.warning(f'**** WARNING ****: Unhandled gender replacement, falling back to first: {options[0]}')
             return options[0]
     raise
 
@@ -155,9 +175,9 @@ def reduce_regular_control_segment(segment):
     control_segment = segment[0:pointer]
     reduced_control_segment = replace_control_segment(segment[0:2], options)
 
-    # print(f'***Found control segment: {control_segment}***')
-    # print(f'***Reduced control segment: {reduced_control_segment}***')
-    # print(f'Regular options: {options}')
+    logging.debug(f'***Found control segment: {control_segment}***')
+    logging.debug(f'***Reduced control segment: {reduced_control_segment}***')
+    logging.debug(f'Regular options: {options}')
 
     return reduced_control_segment, control_segment
 
@@ -192,10 +212,9 @@ def reduce_gender_control_segment(segment):
     control_segment = segment[0:pointer]
     reduced_control_segment = replace_control_segment(segment[0:2], options)
 
-    # TODO: Implement. Should return the reduced form of the control segment. 
-    # print(f'***Found gender control segment: {control_segment}***')
-    # print(f'***Reduced gender control segment: {reduced_control_segment}***')
-    print(f'Gender options: {options}')
+    logging.debug(f'***Found gender control segment: {control_segment}***')
+    logging.debug(f'***Reduced gender control segment: {reduced_control_segment}***')
+    logging.debug(f'Gender options: {options}')
 
     return reduced_control_segment, control_segment
 
@@ -279,7 +298,7 @@ def process_segment(filename, segment):
         processed_segment = reflow_segment(processed_segment)
 
     # Pad the processed segment to the same length as the original.
-    print(f'Processed segment: {bytes(processed_segment)}')
+    logging.info(f'Processed segment: {bytes(processed_segment)}')
     while len(processed_segment) < size:
         processed_segment.extend(b' ')
 
@@ -299,18 +318,18 @@ def special_case_patch(filename, data):
     return patched_data, patched
 
 def patch_file_en(filename):
-    print(f'Patching file {filename}')
+    logging.info(f'Patching file {filename}')
     with open(f'en/{filename}', "rb") as in_file, open (f'out/{mode_lang}/{filename}', "wb") as out_file:
         data = in_file.read()
         size = len(data)
 
-        print(f'Size: {size} bytes')
+        logging.info(f'Size: {size} bytes')
 
         data, patched = special_case_patch(filename, data)
         if (patched):
             out_file.write(data)
             assert len(data) == size, f"Final size ({len(data)}) does not match original size ({size})"
-            print(f'Successfully applied special case patch file en/{filename}')
+            logging.info(f'Successfully applied special case patch file en/{filename}')
             return
 
         final_data = bytearray("", 'utf-8')
@@ -334,7 +353,8 @@ def patch_file_en(filename):
 
                     # Write the segment start marker
                     final_data.extend(b'@a')
-                    final_data.extend(nametag)
+                    if mode_lang == 'en':
+                        final_data.extend(nametag)
                     final_data.extend(b'@b')
 
                     # TODO: Support jp-compatible segments where nametags are inside the regular segment text.
@@ -355,10 +375,17 @@ def patch_file_en(filename):
             else:
                 # We have a start and end to the segment.
                 segment = data[segment_start:segment_end]
+                if mode_lang == 'ja' and len(nametag) > 0:
+                    # Strip off last char and add nametag*
+                    segment_strip_last_char = segment[:len(segment)-1]
+                    nametag_part = bytearray(nametag)
+                    nametag_part.extend(b'*')
+                    segment = nametag_part
+                    segment.extend(segment_strip_last_char)
                 segmentSize = len(segment)
 
                 nametag_print = f' [{nametag}]' if len(nametag) > 0 else ''
-                print(f'Processing segment ({segmentSize} bytes):{nametag_print} {segment}')
+                logging.info(f'Processing segment ({segmentSize} bytes):{nametag_print} {segment}')
 
                 # Process the segment.
                 processedSegment = process_segment(filename, segment)
@@ -380,7 +407,7 @@ def patch_file_en(filename):
 
         assert len(final_data) == size, f"Final size ({len(final_data)}) does not match original size ({size})"
 
-        print(f'Successfully patched file en/{filename}')
+        logging.info(f'Successfully patched file en/{filename}')
 
 if __name__ == "__main__":
     main()

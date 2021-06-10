@@ -5,12 +5,14 @@
 - From Nintendo DS US DQIV ROM: English `.mpt`. files located in `data\data\MESS\en` (153 files total)
 - From Android DQIV OBB: English Party Chat `.mpt` files `b0500000.mpt` to `b0552000.mpt` (46 files total), located in `com.square_enix.android_googleplay.dq4\main.11100.com.square_enix.android_googleplay.dq4.obb\assets\msg\en`
 
-## Guide
+## Quick Start
 
 1. Copy NDS US ROM `.mpt` files to the `en` directory in this repo root
 1. Copy Android OBB party chat `.mpt` files to the `en` directory
-1. Run `python patch_en.py`
+1. Run `python dqiv_patch.py`
 1. Find output files in `out` directory. Place those files into a JP ROM of Dragon Quest IV and repack. 
+
+`dqiv_patch.py -h` shows the available command line arguments.
 
 ## Approach
 
