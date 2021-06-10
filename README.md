@@ -37,6 +37,8 @@ There are several command line arguments available, run `python dqiv_patch.py -h
 ## Comparison Screenshots
 
 ### Before
+Using the raw English sript files on a JA ROM:
+
 ![Chapter Before](screenshots/chapter_before.png)
 ![Battle Before](screenshots/battle_before.png)
 ![Reflow Before](screenshots/reflow_before.png)
@@ -44,6 +46,8 @@ There are several command line arguments available, run `python dqiv_patch.py -h
 ![Item Before](screenshots/item_before.png)
 
 ### After
+With patched script files:
+
 ![Chapter After](screenshots/chapter_after.png)
 ![Battle After](screenshots/battle_after.png)
 ![Reflow After](screenshots/reflow_after.png)
