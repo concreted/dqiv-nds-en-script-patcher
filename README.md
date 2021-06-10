@@ -40,10 +40,10 @@ You have now generated a JA ROM with patched English script which includes party
 
 Alternatively, you can run `python dqiv_patch.py --lang ja` to generate a `ja` output folder. This ROM will show the English script without requiring an Action Replay code. This version adds speaker names to the actual text - this is because the `ja` language mode does not show speaker names floating above the text box, instead expecting them to be in the actual text.
 
-`en` language mode:
+`en` language mode:  
 ![Party Chat](screenshots/en_nametags.png)
 
-`ja` language mode:
+`ja` language mode:  
 ![Party Chat](screenshots/jp_nametags.png)
 
 There are several command line arguments available, run `python dqiv_patch.py -h` to see documentation.
