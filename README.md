@@ -33,7 +33,7 @@ Files:
 1. Copy Android OBB party chat `.mpt` files to the `en` directory
 1. Run `python dqiv_patch.py`
 1. Find output files in `out` directory. 
-1. Load the JA ROM in dslazy and unpack it. Copy the contents of `out` to `NDS_UNPACK/data/data/mess`, replacing the folder of the same name (`en` if you ran with default settings).
+1. Load the JA ROM in dslazy and unpack it. Copy the contents of `out` to `<dslazy_directory>/NDS_UNPACK/data/data/mess`, replacing the folder of the same name (`en` if you ran with default settings).
 1. Pack the ROM in dslazy. 
 
 You have now generated a JA ROM with patched English script which includes party chat. This ROM will still use Japanese text by default, but can be switched to English with the Action Replay code `02106404 00000001`.
