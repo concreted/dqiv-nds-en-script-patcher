@@ -46,7 +46,7 @@ Alternatively, you can run `python dqiv_patch.py --lang ja` to generate a `ja` o
 `ja` language mode:  
 ![Party Chat](screenshots/jp_nametags.png)
 
-There are several command line arguments available, run `python dqiv_patch.py -h` to see documentation.
+There are several command line arguments available, run `python dqiv_patch.py -h` to see documentation. For example you can run the script with `--gender m` to generate a script with male gender pronouns, `--gender f` for female pronouns, or `--gender b` to include both.
 
 ## Comparison Screenshots
 
