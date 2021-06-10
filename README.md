@@ -1,6 +1,16 @@
-# Dragon Quest IV Nintendo DS JA ROM English+Party Chat Script Patcher
+# Dragon Quest IV Nintendo DS Japan ROM English + Party Chat Script Patcher
+
+Patches English script files from the US version of Dragon Quest IV for Nintendo DS and Android so they are rendered nicely when used with the Japan ROM. Addresses various caused by the Japan game code being not fully compatible with English script files.
 
 ![Party Chat](screenshots/partychat.gif)
+
+## Why?
+
+The US version of Dragon Quest IV for the Nintendo DS did not have party chat and seems to completely disable party chat in the game code, so it is not normally possible to play DQIV on DS with party chat in English. The Android version has English party chat script files that are compatible with the Japan ROM, but using English script files are not handled well by the Japan ROM code - among other things, control characters meant to be evaluated to switch between gendered pronouns and singular/plural words are not supported, so they render as literals instead of being evaluated. While it is technically possible to simply place the raw English script files as-is into the Japan ROM, these issues make it a subpar experience.
+
+This patcher attempts to address those issues by replacing control character blocks with normal text, reflowing text so words are not split at the edge of the text box, and other tweaks to improve the overall experience. It is intended to allow a version of DQIV on DS with party chat, with a minimum of jank caused by the Japan ROM code not being meant for English text.
+
+One potential approach that could provide an even better experience would be to alter the US version's code to re-enable party chat. In theory this would allow using the party chat files from the Android version as-is, without any script patching. Making this change is beyond my abilities and seems to require a nontrivial amount of code changes. If someone is able to do that it would make this script completely obsolete and me very happy.
 
 ## Prerequisites
 
@@ -9,9 +19,10 @@ Tools:
 - dslazy (https://www.romhacking.net/utilities/793/)
 
 Files:
-- Nintendo DS JA DQIV ROM
+- Nintendo DS Japan DQIV ROM
 - From Nintendo DS US DQIV ROM: English `.mpt`. files located in `data/data/MESS/en` (153 files total)
     - Load the NDS US ROM in dslazy and unpack it. The unpacked files are in the `NDS_UNPACK` directory where your dslazy executable is.
+    - An alternative is to use the same files from the Japan ROM. The US ROM contains updated script files that fixes some formatting issues (menu options are better named) and is preferred, but the Japan ROM files should work fine.
 - From Android DQIV OBB: English Party Chat `.mpt` files - `b0500000.mpt` to `b0552000.mpt` (46 files total), located in `com.square_enix.android_googleplay.dq4/main.11100.com.square_enix.android_googleplay.dq4.obb/assets/msg/en`
     - After installing the Android DQIV app, you should be able to find the OBB folder by mounting your phone as a USB storage device and navigating to `Android/obb`.
     - The Android OBB also includes the other non-party-chat `en` script files that may work instead of the US ROM files. However I ran into blackscreen issues when using these files on the JA ROM, so prefer using the NDS ones. YMMV 
