@@ -1,5 +1,7 @@
 # Dragon Quest IV Nintendo DS JA ROM English+Party Chat Script Patcher
 
+![Party Chat](screenshots/partychat.gif)
+
 ## Prerequisites
 
 Tools:
@@ -27,7 +29,26 @@ You have now generated a JA ROM with patched English script which includes party
 
 Alternatively, you can run `python dqiv_patch.py --lang ja` to generate a `ja` output folder. This ROM will show the English script without requiring an Action Replay code. This version adds speaker names to the actual text - this is because the `ja` language mode does not show speaker names floating above the text box, instead expecting them to be in the actual text.
 
+![Party Chat](screenshots/en_nametags.png)
+![Party Chat](screenshots/jp_nametags.png)
+
 There are several command line arguments available, run `python dqiv_patch.py -h` to see documentation.
+
+## Comparison Screenshots
+
+### Before
+![Chapter Before](screenshots/chapter_before.png)
+![Battle Before](screenshots/battle_before.png)
+![Reflow Before](screenshots/reflow_before.png)
+![Control Before](screenshots/control_before.png)
+![Item Before](screenshots/item_before.png)
+
+### After
+![Chapter After](screenshots/chapter_after.png)
+![Battle After](screenshots/battle_after.png)
+![Reflow After](screenshots/reflow_after.png)
+![Control After](screenshots/control_after.png)
+![Item After](screenshots/item_after.png)
 
 ## Approach
 
@@ -86,7 +107,10 @@ Additionally, we apply a special patch to shorten chapter names in `b1007000.mpt
 - Some text may overflow since the English script doesn't fix into text boxes expected for the JA ROM. Most obvious example is the chapter names on the save/load screen.
 - When ROM language is changed to English, the name selection screen is still in Japanese, but the main character is always referred to as "Solo" in game. This appears to be hardcoded in the JA ROM and I don't know how to fix this.
 - When ROM language is set to Japanese (default), the game will still use the Japanese name selection screen and save/display the main character name in Japanese. Changing this seems to require changing the ROM code which I don't know how to do.
-- Most item names are lowercased. The actual item strings are in lowercase, and the code to handle uppercasing them when appropriate doesn't seem to work in the JA ROM.
-- The map screen shows "Map Info" and other strings showing shop info in Japanese. Although the "Map Info" string is present in the `en` script files, the JA ROM seems to be hardcoded to show this string in Japanese. Replacing the corresponding file in the `ja` folder doesn't help. A few other strings are also affected in inventory screens, may be others I haven't found.
-- When there is more than one monster type in a battle, all monster names after the first one have `%0` prepended to them. This appears to be getting added in code, so is not possible to strip out. 
+- Most item names are lowercased. The actual item strings are in lowercase, and the code to handle uppercasing them when appropriate doesn't seem to work in the JA ROM.  
+![Item Text Issue](screenshots/issue_item_text.png)
+- The map screen shows "Map Info" and other strings showing shop info in Japanese. Although the "Map Info" string is present in the `en` script files, the JA ROM seems to be hardcoded to show this string in Japanese. Replacing the corresponding file in the `ja` folder doesn't help. A few other strings are also affected in inventory screens, may be others I haven't found.  
+![Map Text Issue](screenshots/issue_map_text.png)
+- When there is more than one monster type in a battle, all monster names after the first one have `%0` prepended to them. This appears to be getting added in code, so is not possible to strip out.  
+![Monster Name Issue](screenshots/issue_monster_names.png)
 - When there is more than one monster type in a battle, monster names appear on one line instead of one name per line. This is because of the reflow changes applied to the battle text file. 
