@@ -74,7 +74,7 @@ With patched script files:
 - Next, seek until we find a `@b` nametag end boundary. Everything between `@a` and `@b` is the speaker name of the dialogue segment.
 - Seek to `@c2@` end boundary. Determine length of segment.
 - Remove each `%0` and add equal number of empty spaces at end of segment.
-    - These appear to be used to selectively capitalize or add prefixes like "A <word>" where appropriate. Guess is that the JA ROM does not have code that supports this, so if not stripped the `%0` appears as-is in text.
+    - These appear to be used to selectively capitalize or add prefixes like "A `<word>`" where appropriate. Guess is that the JA ROM does not have code that supports this, so if not stripped the `%0` appears as-is in text.
 - Find control segments and reduce them based on the following rules. Control segments can be nested so are recursively reduced.
     - Change each plural-variable block e.g. `%H***%Xyou%Yyouse%Z` to plural equivalent, padding end with spaces.
         - These cases appear to be handling player character events. 
