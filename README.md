@@ -37,7 +37,7 @@ There are several command line arguments available, run `python dqiv_patch.py -h
 ## Comparison Screenshots
 
 ### Before
-Using the raw English sript files on a JA ROM:
+Using the raw English script files on a JA ROM:
 
 ![Chapter Before](screenshots/chapter_before.png)
 ![Battle Before](screenshots/battle_before.png)
