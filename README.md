@@ -122,6 +122,8 @@ Additionally, we apply a special patch to shorten chapter names in `b1007000.mpt
 
 - Sometimes garbage characters like `%` may appear, which don't belong to control character segments. This can be caused by certain special characters that aren't handled correctly on the JA ROM. 
 - Since we are forced to pick a single plural/singular substitution, sometimes the text will not have the correct plural/singular word choice.
+- Since the max line size is fixed for the reflow logic, sometimes when item or monster names are substituted into text it will cause the line to exceed the max line size. This will cause the words to be split at the edge of the text box. I don't think this is fixable without changing the ROM code.
+- Enemy critical hits show `ACTOR` instead of the enemy name, probably because of some difference in the JA vs. EN ROM code causing the name substitution to break.
 - Some text may overflow since the English script doesn't fix into text boxes expected for the JA ROM. Most obvious example is the chapter names on the save/load screen.
 - When ROM language is changed to English, the name selection screen is still in Japanese, but the main character is always referred to as "Solo"/"Sophia" in game. This appears to be hardcoded in the JA ROM and I don't know how to fix this.
 - When ROM language is set to Japanese (default), the game will still use the Japanese name selection screen and save/display the main character name in Japanese. Changing this seems to require changing the ROM code which I don't know how to do.
