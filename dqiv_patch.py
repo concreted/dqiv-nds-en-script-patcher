@@ -298,6 +298,13 @@ def process_segment(filename, segment):
     # Reflow lines.
     if (filename == 'b0801000.mpt'):
         processed_segment = reflow_segment(processed_segment, True, 45, False)
+        # Special case logic: 
+        if processed_segment.find(b'appears!') >= 0 or processed_segment.find(b'appear!') >= 0:
+            # Enemy name announcements should end with newline.
+            processed_segment[len(processed_segment)-1] = ord('\n')
+        if processed_segment.find(b'Each party member receives') >= 0:
+            # Experience points message should not have any newlines.
+            processed_segment = bytearray(processed_segment.replace(b'\n', b' '))
     else:
         processed_segment = reflow_segment(processed_segment, True, 43, False)
 

@@ -133,4 +133,3 @@ Additionally, we apply a special patch to shorten chapter names in `b1007000.mpt
 ![Map Text Issue](screenshots/issue_map_text.png)
 - When there is more than one monster type in a battle, all monster names after the first one have `%0` prepended to them. This appears to be getting added in code, so is not possible to strip out by modifying the script data.
 ![Monster Name Issue](screenshots/issue_monster_names.png)
-- When there is more than one monster type in a battle, monster names appear on one line instead of one name per line. This is because of the reflow changes applied to the battle text file. 
