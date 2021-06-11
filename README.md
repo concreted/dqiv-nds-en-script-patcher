@@ -38,7 +38,7 @@ Files:
 
 You have now generated a JA ROM with patched English script which includes party chat. This ROM will still use Japanese text by default, but can be switched to English with the Action Replay code `02106404 00000001`.
 
-Alternatively, you can run `python dqiv_patch.py --lang ja` to generate a `ja` output folder. This ROM will show the English script without requiring an Action Replay code. This version adds speaker names to the actual text - this is because the `ja` language mode does not show speaker names floating above the text box, instead expecting them to be in the actual text.
+Alternatively, you can run `python dqiv_patch.py --lang ja` to generate a `ja` output folder. Copy this to the `<dslazy_directory>/NDS_UNPACK/data/data/mess` directory, replacing the `ja` folder, and pack the ROM is dslazy. This ROM will show the English script without requiring an Action Replay code. This version adds speaker names to the actual text - this is because the `ja` language mode does not show speaker names floating above the text box, instead expecting them to be in the actual text.
 
 `en` language mode:  
 ![Party Chat](screenshots/en_nametags.png)
