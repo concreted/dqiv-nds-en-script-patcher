@@ -272,9 +272,13 @@ def reflow_segment(segment, force=False, reflow_limit=42, newline_end=True):
             current_line_size += 1 
         pointer += 1
 
+    reflowed_size = len(reflowed_segment)
     if newline_end:
-        if reflowed_segment[size-1] == ord(' '):
-            reflowed_segment[size-1] = ord('\n')
+        if reflowed_segment[reflowed_size-1] == ord(' '):
+            reflowed_segment[reflowed_size-1] = ord('\n')
+    else:
+        if reflowed_segment[reflowed_size-1] == ord('\n'):
+            reflowed_segment[reflowed_size-1] = ord(' ')
 
     return reflowed_segment
 
@@ -295,7 +299,7 @@ def process_segment(filename, segment):
     if (filename == 'b0801000.mpt'):
         processed_segment = reflow_segment(processed_segment, True, 45, False)
     else:
-        processed_segment = reflow_segment(processed_segment)
+        processed_segment = reflow_segment(processed_segment, True, 44, False)
 
     # Pad the processed segment to the same length as the original.
     logging.info(f'Processed segment: {bytes(processed_segment)}')
