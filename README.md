@@ -24,7 +24,7 @@ Files:
     - Load the NDS US ROM in dslazy and unpack it. The unpacked files are in the `NDS_UNPACK` directory where your dslazy executable is.
     - An alternative is to use the same files from the Japan ROM. The US ROM contains updated script files that fixes some formatting issues (menu options are better named) and is preferred, but the Japan ROM files should work fine.
 - From Android DQIV OBB: English Party Chat `.mpt` files - `b0500000.mpt` to `b0552000.mpt` (46 files total), located in `com.square_enix.android_googleplay.dq4/main.11100.com.square_enix.android_googleplay.dq4.obb/assets/msg/en`
-    - After installing the Android DQIV app, you should be able to find the OBB folder by mounting your phone as a USB storage device and navigating to `Android/obb`.
+    - After installing the Android DQIV app, you should be able to find the OBB by mounting your phone as a USB storage device and navigating to `Android/obb`. `.obb` files are basically zip files and can be extracted with any zip utility.
     - The Android OBB also includes the other non-party-chat `en` script files that may work instead of the US ROM files. However I ran into blackscreen issues when using these files on the JA ROM, so prefer using the NDS ones. YMMV 
 
 ## Quick Start
