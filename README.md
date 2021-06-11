@@ -106,14 +106,14 @@ With patched script files:
     - Rules:
         - `they's` to `they are`
         - `What luck!` to `Found` - this makes the standard item discovery text flow better since we cannot use the `%0` control character to add the proper prefix.
-- Re-layout line by first converting all newlines into spaces. Then split segments into lines with a max limit (usually 42) on space boundaries, changing spaces to newlines.
+- Re-layout line by first converting all newlines into spaces. Then split segments into lines with a max limit (usually 44) on space boundaries, changing spaces to newlines.
 
 
 Each resulting file should be same size as the original.
 
 The file `b0801000.mpt` contains text used in battles. Battle text is rendered in a smaller font, so the normal 42-char line limit makes lines a little too short. Also, there is a strange issue where the game auto-advances text boxes under certain conditions which can make the text box auto-advance to an empty screen. For these reasons I do the following special case logic for this file. This causes a few issues which are noted in the following section.
 - Force reflow to remove all existing newlines
-- Reflow with line limit of 45
+- Reflow with line limit of 45 (this causes the enemy death text to flow better)
 - Remove newlines from end of each line 
 
 Additionally, we apply a special patch to shorten chapter names in `b1007000.mpt`. The `en` chapter titles overflow the JA ROM chapter heading text boxes so are shortened. 
