@@ -29,7 +29,8 @@ Files:
 
 ## Quick Start
 
-1. Copy NDS US ROM `.mpt` files from the unpacked folder to the `en` directory in this repo root
+1. Make sure there is an empty folder named `en` in the same directory as the `dqiv_patch.py` script file. If you cloned this repo/downloaded as a zip it should already be present, but if not create it.
+1. Copy NDS US ROM `.mpt` files from the unpacked folder to the `en` directory. 
 1. Copy Android OBB party chat `.mpt` files to the `en` directory
 1. Run `python dqiv_patch.py`
 1. Find output files in `out` directory. 
