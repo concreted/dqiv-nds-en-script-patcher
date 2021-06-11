@@ -132,4 +132,3 @@ Additionally, we apply a special patch to shorten chapter names in `b1007000.mpt
 - The map screen shows "Map Info" and other strings showing shop info in Japanese. Although the "Map Info" string is present in the `en` script files, the JA ROM seems to be hardcoded to show this string in Japanese. Replacing the corresponding file in the `ja` folder doesn't help. A few other strings are also affected in inventory screens, may be others I haven't found.  
 ![Map Text Issue](screenshots/issue_map_text.png)
 - When there is more than one monster type in a battle, all monster names after the first one have `%0` prepended to them. This appears to be getting added in code, so is not possible to strip out by modifying the script data.
-![Monster Name Issue](screenshots/issue_monster_names.png)
