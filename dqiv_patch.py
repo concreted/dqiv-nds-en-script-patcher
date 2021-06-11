@@ -242,7 +242,7 @@ def fix_grammar(segment):
     fixed_segment = fixed_segment.replace(b"What luck!", b"Found")
     return bytearray(fixed_segment)
 
-def reflow_segment(segment, force=False, reflow_limit=42, newline_end=True):
+def reflow_segment(segment, force=False, reflow_limit=43, newline_end=True):
     # Check if we need to reflow at all. If not, return the original segment.
     needs_reflow = force
     lines = segment.split(b'\n')
@@ -299,7 +299,7 @@ def process_segment(filename, segment):
     if (filename == 'b0801000.mpt'):
         processed_segment = reflow_segment(processed_segment, True, 45, False)
     else:
-        processed_segment = reflow_segment(processed_segment, True, 44, False)
+        processed_segment = reflow_segment(processed_segment, True, 43, False)
 
     # Pad the processed segment to the same length as the original.
     logging.info(f'Processed segment: {bytes(processed_segment)}')
