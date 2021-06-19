@@ -87,6 +87,9 @@ For each file:
     - Change each context-specific block e.g. `%O***%Xthe girls'%Yyour%Z` to the first option.
         - These seem to be handling different cases when certain party members are present(?).
         - Use the first option since it seems to read fine in practice. 
+    - Change each context-specific block e.g. `%L***%X<both sisters>%Y<one sister>%Z` to the second option.
+        - These cases appear in dialogue where one or both sisters (Meena and Maya) can be present.
+        - Pick the second case since it reads OK if both sisters are present.
     - Change each gender-variable block e.g. `%A***%Xsir%Z%B090%Xlady%Z` to gender-neutral equivalent, padding end with spaces. 
         - If no matching rule is found or only one option, warn and default to first item.
         - Rules:

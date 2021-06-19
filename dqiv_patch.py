@@ -60,10 +60,10 @@ def main():
     # patch_file_en('b0801000.mpt')
 
 def is_control_char(bytes):
-    return bytes == b'%H' or bytes == b'%M' or bytes == b'%O' or bytes == b'%A'
+    return is_regular_control_char(bytes) or is_gender_control_char(bytes)
 
 def is_regular_control_char(bytes):
-    return bytes == b'%H' or bytes == b'%M' or bytes == b'%O'
+    return bytes == b'%H' or bytes == b'%M' or bytes == b'%O' or bytes == b'%L'
 
 def is_regular_secondary_control_char(bytes):
     return bytes == b'%Y'
@@ -86,6 +86,9 @@ def replace_control_segment(control_char, options):
     elif control_char == b'%O':
         # Rewrite %O***%X<leader>%Y<specific party member>%Z blocks. Use the first variant.
         return options[0]
+    elif control_char == b'%L':
+        # Rewrite %L***%X<both sisters>%Y<one sister>%Z blocks. Use the second variant.
+        return options[1]
     elif control_char == b'%A':
         # Rewrite %A***%X<masculine>%Z%B***%X<feminine>%Z%C***%X<non-gendered>%Z blocks 
         # using specific gender mode or rule-based replacement.
