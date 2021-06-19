@@ -269,8 +269,8 @@ def reflow_segment(segment, force=False, reflow_limit=43, newline_end=True):
             last_space_index = pointer
         if current_line_size > reflow_limit and last_space_index is not None:
             reflowed_segment[last_space_index] = ord('\n')
+            current_line_size = pointer - last_space_index
             last_space_index = None
-            current_line_size = 0
         else:
             current_line_size += 1 
         pointer += 1
