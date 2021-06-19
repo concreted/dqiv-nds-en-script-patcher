@@ -293,6 +293,16 @@ def process_segment(filename, segment):
     # Strip all %0 control characters.
     segment = segment.replace(b'%0', b'')
 
+    # Strip special characters that aren't rendered correctly in English and show up as "%".
+    segment = segment.replace(b'\xe3\x88\xa1', b'')
+    segment = segment.replace(b'\xe2\x93\x86', b'')
+    segment = segment.replace(b'\xe2\x93\x87', b'')
+    segment = segment.replace(b'\xe2\x93\x95', b'')
+    segment = segment.replace(b'\xe2\x93\x96', b'')
+    segment = segment.replace(b'\xe2\x93\x97', b'')
+    segment = segment.replace(b'\xe2\x93\x98', b'')
+    segment = segment.replace(b'\xe2\x93\x99', b'')
+
     processed_segment = process_control_chars(segment)
 
     # Fix grammar issues caused by replacements.
