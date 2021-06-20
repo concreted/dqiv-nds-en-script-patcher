@@ -344,6 +344,12 @@ def process_segment(filename, segment):
     if (special_case_idx >= 0):
         processed_segment[special_case_idx] = ord(b'\n')
 
+    if segment_no_newlines.find(b"%a02010's %a00101 is exchanged for %a02180's %a00102.") >= 0:
+        processed_segment = bytearray(b"%a02010's %a00101 is exchanged for\n%a02180's %a00102.")
+    if segment_no_newlines.find(b'%a02010 puts their %a00100 in a different place. ') >= 0:
+        processed_segment = bytearray(b'%a02010 puts their %a00100\nin a different place. ')
+    if segment_no_newlines.find(b'%a00110 puts %a02100 in a different place in the bag. ') >= 0:
+        processed_segment = bytearray(b'%a00110 puts %a02100\nin a different place in the bag. ')
     if (segment_no_newlines.find(b"t notice the party's ") >= 0):
         # This line is rendered in small font and doesn't need any newlines.
         processed_segment = segment_no_newlines
