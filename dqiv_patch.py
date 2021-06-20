@@ -84,8 +84,9 @@ def replace_control_segment(control_char, options):
         # Rewrite %M***%X<plural>%Y<singular>%Z blocks. Use the singular variant for these blocks.
         return options[len(options)-1]
     elif control_char == b'%O':
-        # Rewrite %O***%X<leader>%Y<specific party member>%Z blocks. Use the first variant.
-        return options[0]
+        # Rewrite %O***%X<party member>%Y<other party member>%Z blocks. 
+        # Use the second variant since it seems more generally applicable.
+        return options[1]
     elif control_char == b'%L':
         # Rewrite %L***%X<both sisters>%Y<one sister>%Z blocks. Use the second variant.
         return options[1]
