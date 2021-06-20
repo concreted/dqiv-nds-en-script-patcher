@@ -344,6 +344,10 @@ def process_segment(filename, segment):
     if (special_case_idx >= 0):
         processed_segment[special_case_idx] = ord(b'\n')
 
+    if (segment_no_newlines.find(b"t notice the party's ") >= 0):
+        # This line is rendered in small font and doesn't need any newlines.
+        processed_segment = segment_no_newlines
+
     # Pad the processed segment to the same length as the original.
     logging.info(f'Processed segment: {bytes(processed_segment)}')
     while len(processed_segment) < size:
