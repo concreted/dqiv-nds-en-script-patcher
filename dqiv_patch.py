@@ -323,16 +323,26 @@ def process_segment(filename, segment):
    
     # Perform special case reflow
     segment_no_newlines = bytearray(processed_segment.replace(b'\n', b' '))
-    if (segment_no_newlines.find(b'exchanges their %a00102 ') >= 0):
-        processed_segment = processed_segment.replace(b'exchanges their %a00102 ', b'exchanges their %a00102\n')
-    if (segment_no_newlines.find(b'puts their %a00100 ') >= 0):
-        processed_segment = processed_segment.replace(b'puts their %a00100 ', b'puts their %a00100\n')
-    if (segment_no_newlines.find(b'puts %a02100 ') >= 0):
-        processed_segment = processed_segment.replace(b'puts %a02100 ', b'puts %a02100\n')
-    if (segment_no_newlines.find(b'takes %a02100 ') >= 0):
-        processed_segment = processed_segment.replace(b'takes %a02100 ', b'takes %a02100\n')
-    if (segment_no_newlines.find(b" Your custom's most appreciated.") >= 0):
-        processed_segment = processed_segment.replace(b" Your custom's most appreciated.", b"\nYour custom's most appreciated.")
+    special_case_str = b'exchanges their %a00102 '
+    special_case_idx = segment_no_newlines.find(special_case_str)
+    if (special_case_idx >= 0):
+        processed_segment[special_case_idx + len(special_case_str) - 1] = ord(b'\n')
+    special_case_str = b'puts their %a00100 '
+    special_case_idx = segment_no_newlines.find(special_case_str)
+    if (special_case_idx >= 0):
+        processed_segment[special_case_idx + len(special_case_str) - 1] = ord(b'\n')
+    special_case_str = b'puts %a02100 '
+    special_case_idx = segment_no_newlines.find(special_case_str)
+    if (special_case_idx >= 0):
+        processed_segment[special_case_idx + len(special_case_str) - 1] = ord(b'\n')
+    special_case_str = b'takes %a02100 '
+    special_case_idx = segment_no_newlines.find(special_case_str)
+    if (special_case_idx >= 0):
+        processed_segment[special_case_idx + len(special_case_str) - 1] = ord(b'\n')
+    special_case_str = b" Your custom's most appreciated."
+    special_case_idx = segment_no_newlines.find(special_case_str)
+    if (special_case_idx >= 0):
+        processed_segment[special_case_idx] = ord(b'\n')
 
     # Pad the processed segment to the same length as the original.
     logging.info(f'Processed segment: {bytes(processed_segment)}')
