@@ -86,7 +86,7 @@ For each file:
         - Always pick the latter of the two options (singular) because it sounds OK even when there is more than one item.
     - Change each context-specific block e.g. `%O***%Xthe girls'%Yyour%Z` to the first option.
         - These seem to be handling different cases when certain party members are present(?).
-        - Use the first option since it seems to read fine in practice. 
+        - Use the second option since it seems to read fine in practice. 
     - Change each context-specific block e.g. `%L***%X<both sisters>%Y<one sister>%Z` to the second option.
         - These cases appear in dialogue where one or both sisters (Meena and Maya) can be present.
         - Pick the second case since it reads OK if both sisters are present.
