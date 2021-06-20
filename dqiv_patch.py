@@ -356,10 +356,10 @@ def process_segment(filename, segment):
         # This line is rendered in small font and doesn't need any newlines.
         processed_segment = segment_no_newlines
     elif (segment_no_newlines.find(b"%a02180 takes %a02100 out of the bag.") >= 0):
-        # This line is rendered in small font and doesn't need any newlines.
         processed_segment = segment_no_newlines
     elif (segment_no_newlines.find(b"%a00120 puts %a02100 into the bag.") >= 0):
-        # This line is rendered in small font and doesn't need any newlines.
+        processed_segment = segment_no_newlines
+    elif (segment_no_newlines.find(b'%a02010 puts %a02100 in the bag.') >= 0):
         processed_segment = segment_no_newlines
 
     # Pad the processed segment to the same length as the original.
