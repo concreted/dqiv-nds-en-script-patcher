@@ -320,6 +320,19 @@ def process_segment(filename, segment):
             processed_segment = bytearray(processed_segment.replace(b'\n', b' '))
     else:
         processed_segment = reflow_segment(processed_segment, True, 43, False)
+   
+    # Perform special case reflow
+    segment_no_newlines = bytearray(processed_segment.replace(b'\n', b' '))
+    if (segment_no_newlines.find(b'exchanges their %a00102 ') >= 0):
+        processed_segment = processed_segment.replace(b'exchanges their %a00102 ', b'exchanges their %a00102\n')
+    if (segment_no_newlines.find(b'puts their %a00100 ') >= 0):
+        processed_segment = processed_segment.replace(b'puts their %a00100 ', b'puts their %a00100\n')
+    if (segment_no_newlines.find(b'puts %a02100 ') >= 0):
+        processed_segment = processed_segment.replace(b'puts %a02100 ', b'puts %a02100\n')
+    if (segment_no_newlines.find(b'takes %a02100 ') >= 0):
+        processed_segment = processed_segment.replace(b'takes %a02100 ', b'takes %a02100\n')
+    if (segment_no_newlines.find(b" Your custom's most appreciated.") >= 0):
+        processed_segment = processed_segment.replace(b" Your custom's most appreciated.", b"\nYour custom's most appreciated.")
 
     # Pad the processed segment to the same length as the original.
     logging.info(f'Processed segment: {bytes(processed_segment)}')
