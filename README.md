@@ -1,6 +1,6 @@
 # Dragon Quest IV (NDS) English + Party Chat Script Patcher for Japan ROM
 
-Patches English script files from the US version of Dragon Quest IV for Nintendo DS and Android so they are rendered nicely when used with the Japan ROM. Addresses various caused by the Japan game code being not fully compatible with English script files.
+Patches English script files from the US version of Dragon Quest IV for Nintendo DS and Android so they are rendered nicely when used with the Japan ROM. Addresses various issues caused by the Japan game code being not fully compatible with English script files.
 
 ![Party Chat](screenshots/partychat.gif)
 
