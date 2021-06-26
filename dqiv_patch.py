@@ -357,8 +357,8 @@ def process_segment(filename, segment):
         processed_segment = bytearray(b'%a00110 puts %a02100\nin a different place in the bag. ')
     elif segment_no_newlines.find(b"I'll take that %a00100 off your hands for %a00620 gold coins. Okay?") >= 0:
         processed_segment = bytearray(b"I'll take that %a00100 off your\nhands for %a00620 gold coins. Okay?")
-    elif segment_no_newlines.find(b"%a04100? I'll give you %a00620 gold coins for it") >= 0:
-        processed_segment = bytearray(b"%a04100? I'll give you %a00620\ngold coins for it")
+    elif segment_no_newlines.find(b"%a04100? I'll give you %a00620 gold coins for it. Okay?") >= 0:
+        processed_segment = bytearray(b"%a04100? I'll give you %a00620\ngold coins for it. Okay?")
     elif (segment_no_newlines.find(b"t notice the party's ") >= 0):
         # This line is rendered in small font and doesn't need any newlines.
         processed_segment = segment_no_newlines
