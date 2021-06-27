@@ -366,10 +366,19 @@ def process_segment(filename, segment):
         processed_segment = bytearray(b"I'll take that %a00100 off your\nhands for %a00620 gold coins. Okay?")
     elif segment_no_newlines.find(b"%a04100? I'll give you %a00620 gold coins for it. Okay?") >= 0:
         processed_segment = bytearray(b"%a04100? I'll give you %a00620\ngold coins for it. Okay?")
+    # special case control character for yggdrasil leaf that doesn't have a good choice available.
     elif segment_no_newlines.find(b'%a02010 mashes up the Yggdrasil leaf and administers it to %N180%Xthemself%Y%a02180%Z.') >= 0:
         processed_segment = bytearray(b'%a02010 mashes up the\nYggdrasil leaf and administers it.')
+    # typo in original script
     elif segment_no_newlines.find(b'*: May divine protection accompany the great , %a00090.') >= 0:
         processed_segment = bytearray(b'*: May divine protection accompany the\ngreat %a00090.')
+    # better formatting for multiheal
+    elif segment_no_newlines.find(b"%a02010's wounds heal! ") >= 0:
+        processed_segment = bytearray(b"%a02010's wounds heal!\n")
+    elif segment_no_newlines.find(b"%a02180's wounds heal! ") >= 0:
+        processed_segment = bytearray(b"%a02180's wounds heal!\n")
+    elif segment_no_newlines.find(b"%a02010 casts %a00170! ") >= 0:
+        processed_segment = bytearray(b"%a02010 casts %a00170!\n")
     elif (segment_no_newlines.find(b"t notice the party's ") >= 0):
         # This line is rendered in small font and doesn't need any newlines.
         processed_segment = segment_no_newlines
