@@ -368,6 +368,8 @@ def process_segment(filename, segment):
         processed_segment = bytearray(b"%a04100? I'll give you %a00620\ngold coins for it. Okay?")
     elif segment_no_newlines.find(b'%a02010 mashes up the Yggdrasil leaf and administers it to %N180%Xthemself%Y%a02180%Z.') >= 0:
         processed_segment = bytearray(b'%a02010 mashes up the\nYggdrasil leaf and administers it.')
+    elif segment_no_newlines.find(b'*: May divine protection accompany the great , %a00090.') >= 0:
+        processed_segment = bytearray(b'*: May divine protection accompany the\ngreat %a00090.')
     elif (segment_no_newlines.find(b"t notice the party's ") >= 0):
         # This line is rendered in small font and doesn't need any newlines.
         processed_segment = segment_no_newlines
