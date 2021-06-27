@@ -63,7 +63,7 @@ def is_control_char(bytes):
     return is_regular_control_char(bytes) or is_gender_control_char(bytes)
 
 def is_regular_control_char(bytes):
-    return bytes == b'%H' or bytes == b'%M' or bytes == b'%O' or bytes == b'%L'
+    return bytes == b'%H' or bytes == b'%M' or bytes == b'%O' or bytes == b'%L' or bytes == b'%D'
 
 def is_regular_secondary_control_char(bytes):
     return bytes == b'%Y'
@@ -89,6 +89,9 @@ def replace_control_segment(control_char, options):
         return options[1]
     elif control_char == b'%L':
         # Rewrite %L***%X<both sisters>%Y<one sister>%Z blocks. Use the second variant.
+        return options[1]
+    elif control_char == b'%D':
+        # Rewrite %D120%Xyourself%Yyourselves%Z blocks, used only by Hank Hoffman Jr. Use the secpnd option.
         return options[1]
     elif control_char == b'%A':
         # Rewrite %A***%X<masculine>%Z%B***%X<feminine>%Z%C***%X<non-gendered>%Z blocks 
@@ -296,7 +299,10 @@ def process_segment(filename, segment):
     # Strip all %0 control characters.
     segment = segment.replace(b'%0', b'')
 
-    # Strip special characters that aren't rendered correctly in English and show up as "%".
+    # Strip or replace special characters that aren't rendered correctly in English and show up as "%".
+    segment = segment.replace(b'\xe2\x80\x94', b'-')
+    segment = segment.replace(b'\xe2\x80\x98', b'"')
+    segment = segment.replace(b'\xe2\x80\x99', b'"')
     segment = segment.replace(b'\xe3\x88\xa1', b'')
     segment = segment.replace(b'\xe2\x93\x86', b'')
     segment = segment.replace(b'\xe2\x93\x87', b'')
@@ -305,6 +311,7 @@ def process_segment(filename, segment):
     segment = segment.replace(b'\xe2\x93\x97', b'')
     segment = segment.replace(b'\xe2\x93\x98', b'')
     segment = segment.replace(b'\xe2\x93\x99', b'')
+    segment = segment.replace(b'\xe2\x99\xaa', b'~')
 
     processed_segment = process_control_chars(segment)
 
@@ -359,6 +366,8 @@ def process_segment(filename, segment):
         processed_segment = bytearray(b"I'll take that %a00100 off your\nhands for %a00620 gold coins. Okay?")
     elif segment_no_newlines.find(b"%a04100? I'll give you %a00620 gold coins for it. Okay?") >= 0:
         processed_segment = bytearray(b"%a04100? I'll give you %a00620\ngold coins for it. Okay?")
+    elif segment_no_newlines.find(b'%a02010 mashes up the Yggdrasil leaf and administers it to %N180%Xthemself%Y%a02180%Z.') >= 0:
+        processed_segment = bytearray(b'%a02010 mashes up the\nYggdrasil leaf and administers it.')
     elif (segment_no_newlines.find(b"t notice the party's ") >= 0):
         # This line is rendered in small font and doesn't need any newlines.
         processed_segment = segment_no_newlines
