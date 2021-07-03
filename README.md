@@ -29,6 +29,7 @@ Files:
 
 ## Quick Start
 
+1. Download this patch tool by going to https://github.com/concreted/dqiv-nds-en-script-patcher/releases and downloading the latest version and unzip it. You can also clone this repo or download the repo as a zip.
 1. Make sure there is an empty folder named `en` in the same directory as the `dqiv_patch.py` script file. If you cloned this repo/downloaded as a zip it should already be present, but if not create it.
 1. Copy NDS US ROM `.mpt` files from the unpacked folder to the `en` directory. 
 1. Copy Android OBB party chat `.mpt` files to the `en` directory
