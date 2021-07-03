@@ -249,6 +249,7 @@ def fix_grammar(segment):
     fixed_segment = fixed_segment.replace(b'weve ', b"we've")
     fixed_segment = fixed_segment.replace(b'Weve ', b"We've")
     fixed_segment = fixed_segment.replace(b"What luck!", b"Found")
+    fixed_segment = fixed_segment.replace(b'they cares', b'they care')
     return bytearray(fixed_segment)
 
 def reflow_segment(segment, force=False, reflow_limit=43, newline_end=True):
