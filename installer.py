@@ -19,7 +19,7 @@ obb = "none"
 
 for i in os.listdir("roms"):
     if i.endswith(".nds"):
-        rom = subprocess.run("ndstool -i " + path_to_roms + "/" + i, shell=True, stdout=subprocess.PIPE)
+        rom = subprocess.run(path_to_ndstool + " -i " + path_to_roms + "/" + i, shell=True, stdout=subprocess.PIPE)
 
         if "YIVE (NTR-YIVE-USA)" in str(rom.stdout):
             roms["us"] = path_to_roms + "/" + i
@@ -77,7 +77,7 @@ command = "python3 dqiv_patch.py --lang ja"
 
 subprocess.run(command, shell=True)
 
-def repack(mode_lang : str):
+def repack(mode_lang : str, mode_gender : str):
     
     path = path_to_roms + "/" + "repack" + "/data/data/MESS/" + mode_lang
 
@@ -93,10 +93,13 @@ def repack(mode_lang : str):
     path_to_repack = path_to_roms + "/" + "repack"
 
     print("Repacking rom...")
-    repacking = subprocess.run(path_to_ndstool + " -c \"" + path_to_roms + "/" + "Dragon Quest IV English Party Chat Patched.nds\"" + " -9 " + path_to_repack + "/arm9.bin -7 " + path_to_repack + "/arm7.bin -y9 " + path_to_repack + "/y9.bin -y7 " +
+    repacking = subprocess.run(path_to_ndstool + " -c \"" + "Dragon Quest IV Party Chat Patched [" + "gender=" + mode_gender + " mode_lang=" + mode_lang + ".nds\"" + " -9 " + path_to_repack + "/arm9.bin -7 " + path_to_repack + "/arm7.bin -y9 " + path_to_repack + "/y9.bin -y7 " +
                    path_to_repack + "/y7.bin -t " + path_to_repack + "/banner.bin -h " + path_to_repack + "/header.bin -d " + path_to_repack + "/data -y " + path_to_repack + "/overlay ", shell=True, stdout=subprocess.PIPE)
     print("Rom repacked!")
 
     shutil.rmtree(path_to_repack)
 
-repack(mode_lang="ja")
+mode_gender = 'n'
+mode_lang = 'ja'
+
+repack(mode_lang=mode_lang, mode_gender=mode_gender)
