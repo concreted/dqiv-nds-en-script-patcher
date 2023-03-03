@@ -8,6 +8,11 @@ path_to_roms = "roms"
 us_rom_indicator = "us"
 ja_rom_indicator = "ja"
 
+try:
+    os.remove(path_to_roms + "/" + "Dragon Quest IV English Party Chat Patched.nds")
+except:
+    pass
+
 regions = [us_rom_indicator, ja_rom_indicator]
 
 roms = {us_rom_indicator : path_to_roms + "/" + us_rom_indicator + ".nds", 
@@ -15,7 +20,7 @@ roms = {us_rom_indicator : path_to_roms + "/" + us_rom_indicator + ".nds",
 
 for i in regions:
     if os.path.exists(path_to_roms + "/" + i):
-        #shutil.rmtree(path_to_roms + "/" + i)
+        shutil.rmtree(path_to_roms + "/" + i)
         pass
 
 for i in roms:
@@ -59,7 +64,8 @@ path_to_en_ds_files = path_to_roms + "/" + \
 for i in os.listdir(path_to_en_ds_files):
     os.rename(path_to_en_ds_files + "/" + i, "en/" + i)
 
-command = input("input command: ")
+#command = input("input command: python3 dqiv_patch.py --lang ja")
+command = "python3 dqiv_patch.py --lang ja"
 
 subprocess.run(command, shell=True)
 
@@ -67,13 +73,15 @@ def repack(mode_lang : str):
     path = path_to_roms + "/" + ja_rom_indicator + "/data/data/MESS/" + mode_lang
     for i in os.listdir(path):
         os.remove(path + "/" + i)
-    for i in os.listdir("out"):
-        os.rename("out/" + i, path + "/" + i)
+    for i in os.listdir("out/" + mode_lang):
+        os.rename("out/" +mode_lang + "/" + i, path + "/" + i)
     
     path_to_region_folder = path_to_roms + "/" + mode_lang
     subprocess.run(path_to_ndstool + " -c \"" + path_to_roms + "/" + "Dragon Quest IV English Party Chat Patched.nds\"" + " -9 " + path_to_region_folder + "/arm9.bin -7 " + path_to_region_folder + "/arm7.bin -y9 " + path_to_region_folder + "/y9.bin -y7 " +
                    path_to_region_folder + "/y7.bin -t " + path_to_region_folder + "/banner.bin -h " + path_to_region_folder + "/header.bin -d " + path_to_region_folder + "/data -y " + path_to_region_folder + "/overlay ", shell=True)
 
 repack(mode_lang="ja")
+
+
 
 shutil.rmtree("out")
