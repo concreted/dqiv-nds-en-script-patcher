@@ -1,4 +1,7 @@
 out
 *.mpt
-roms/*
+roms/ja
+roms/us
+*.nds
+*.obb
 test.py

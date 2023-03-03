@@ -1,9 +1,30 @@
 import os, shutil, argparse, logging, sys
 
+import subprocess
+from zipfile import ZipFile
+
 logging.basicConfig(format='%(message)s', stream=sys.stdout, level=logging.INFO)
 
 mode_gender = 'n'
 mode_lang = 'en'
+
+'''path_to_ndstool = "ndstool"
+path_to_roms = "roms"
+regions = ["us", "ja"]
+roms = {"us" : "none",
+        "ja" : "none"}
+obb = "none"
+
+for i in os.listdir("roms"):
+    if i.endswith(".nds"):
+        rom = subprocess.run("ndstool -i " + path_to_roms + "/" + i, shell=True, stdout=subprocess.PIPE)
+
+        if "YIVE (NTR-YIVE-USA)" in str(rom.stdout):
+            roms["us"] = path_to_roms + "/" + i
+        elif "YIVJ (NTR-YIVJ-JPN)" in str(rom.stdout):
+            roms["ja"] = path_to_roms + "/" + i
+    elif i.endswith(".obb"):
+        obb = i'''
 
 def main():
     global mode_gender
