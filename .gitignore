@@ -1,2 +1,4 @@
 out
 *.mpt
+roms/*
+test.py
