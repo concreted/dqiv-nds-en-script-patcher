@@ -652,7 +652,10 @@ def automatic_extract():
     for i in mpt_list:
         with ZipFile(path_to_roms + "/" + obb, 'r') as zObject:
             zObject.extract(i, path="en/")
-            os.rename("en/" + i, "en/" + i.split("assets/msg/en/")[1])
+            try:
+                os.rename("en/" + i, "en/" + i.split("assets/msg/en/")[1])
+            except:
+                print("en/" + i.split("assets/msg/en/")[1] + " already exists.")
     print("Extraction of obb files complete.")
     shutil.rmtree("en/assets")
 
@@ -671,7 +674,10 @@ def repack(mode_lang : str, mode_gender : str, path_to_ndstool: str):
     for i in os.listdir(path):
         os.remove(path + "/" + i)
     for i in os.listdir("out/" + mode_lang):
-        os.rename("out/" + mode_lang + "/" + i, path + "/" + i)
+        try:
+            os.rename("out/" + mode_lang + "/" + i, path + "/" + i)
+        except:
+            print(path + "/" + i + " already exists.")
     
     path_to_repack = path_to_roms + "/" + "repack"
 
