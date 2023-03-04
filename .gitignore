@@ -6,3 +6,4 @@ roms/repack
 *.nds
 *.obb
 test.py
+ndstool

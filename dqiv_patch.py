@@ -1,4 +1,4 @@
-import os, shutil, argparse, logging, sys, subprocess
+import os, shutil, argparse, logging, sys, subprocess, requests
 from zipfile import ZipFile
 
 logging.basicConfig(format='%(message)s', stream=sys.stdout, level=logging.INFO)
@@ -520,11 +520,80 @@ def automatic_extract():
             "ja" : "none"}
     obb = "none"
 
-    #check if ndstool is installed
-    ndstool = subprocess.run(path_to_ndstool, shell=True, stdout=subprocess.PIPE)
-    if "Nintendo DS rom tool 2.1.2 - Mar  2 2023\\nby Rafael Vuijk, Dave Murphy, Alexei Karpenko" not in str(ndstool.stdout):
-        print("ndstool not installed!")
-        sys.exit(1)
+    ndstool_links = {"linux aarch64" : "https://github.com/fenwaypowers/ndstool/releases/download/2.1.2/ndstool-2.1.2-linux_aarch64.zip",
+                     "linux x86_64" : "https://github.com/fenwaypowers/ndstool/releases/download/2.1.2/ndstool-2.1.2-1-linux_x86_64.zip",
+                     "mac osx" : "https://github.com/fenwaypowers/ndstool/releases/download/2.1.2/ndstool-2.1.2-1-osx.zip",
+                     "win32" : "https://github.com/fenwaypowers/ndstool/releases/download/2.1.2/ndstool-2.1.2-1-win32.zip",
+                     "windows" : "https://github.com/fenwaypowers/ndstool/releases/download/2.1.2/ndstool-2.1.2-1-windows.zip",
+                     "windows i686" : "https://github.com/fenwaypowers/ndstool/releases/download/2.1.2/ndstool-2.1.2-2-windows_i686.zip",
+                     "windows x86_64" : "https://github.com/fenwaypowers/ndstool/releases/download/2.1.2/ndstool-2.1.2-windows_x86_64.zip"}
+    
+    ndstool_string = "ndstool 2.1.2"
+
+    #check if ndstool is installed, install it if not
+    ndstool_found = False
+    for possible_path in ["ndstool" , "ndstool/ndstool", "ndstool/ndstool.exe"]:
+        correct_output =  "Nintendo DS rom tool 2.1.2 - Mar  2 2023\\nby Rafael Vuijk, Dave Murphy, Alexei Karpenko"
+
+        ndstool = subprocess.run(path_to_ndstool, shell=True, stdout=subprocess.PIPE)
+
+        if correct_output in ndstool:
+            ndstool_found = True
+            path_to_ndstool = possible_path
+
+    if ndstool_found == False:
+        
+        install = input("Could not find " + ndstool_string + " on your system. Download it? (y/n): ")
+        if install in ["", "y", "Y"]:
+
+            counter = 1
+            dl_list = []
+            for i in ndstool_links:
+                print("[" + str(counter) + "] : " + i)
+                dl_list.append(i)
+                counter += 1
+            
+            selection = " "
+            
+            while(True):
+                selection = input("Select a version [1-" + str(len(dl_list)) + "] (n to cancel): ")
+                if selection in ["n", "N"]:
+                    print(ndstool_string + " is required for automatic installation. ")
+                    sys.exit(1)
+                
+                if selection.isdigit:
+                    if int(selection) in range(1,len(dl_list) + 1):
+                        break
+
+            selection = int(selection)
+
+            download = requests.get(ndstool_links[dl_list[selection - 1]])
+
+            if os.path.exists("ndstool") == False:
+                os.makedirs("ndstool")
+
+            with open("ndstool/ndstool.zip",'wb') as f:
+                print("Downloading ndstool...")
+                f.write(download.content)
+
+                file_to_extract = "ndstool"
+                if "win" in dl_list[selection - 1]:
+                    file_to_extract += ".exe"
+                
+                with ZipFile("ndstool/ndstool.zip", 'r') as zObject:
+                    zObject.extract(file_to_extract, path="ndstool/")
+
+                os.remove("ndstool/ndstool.zip")
+
+                print("ndstool downloaded.")
+
+            path_to_ndstool = "ndstool/" + file_to_extract
+
+            sys.exit(0)
+        else:
+            print(ndstool_string + " is required for automatic installation. ")
+
+
 
     #locate the US and JA NDS roms as well as obb file
     for i in os.listdir("roms"):
@@ -606,4 +675,3 @@ def repack(mode_lang : str, mode_gender : str):
 
 if __name__ == "__main__":
     main()
-    
