@@ -6,7 +6,6 @@ logging.basicConfig(format='%(message)s', stream=sys.stdout, level=logging.INFO)
 mode_gender = 'n'
 mode_lang = 'en'
 
-path_to_ndstool = "ndstool"
 path_to_roms = "roms"
 
 def main():
@@ -34,6 +33,7 @@ def main():
     mode_gender = args.gender
     mode_lang = args.lang
     mode_manual = args.manual
+    path_to_ndstool = "ndstool"
 
     logging.info(f"Patching directory en, writing results to 'out/{mode_lang}'")
     
@@ -46,14 +46,14 @@ def main():
         patch_file_en(args.file)
     else:
         if mode_manual == False:
-            automatic_extract()
+            path_to_ndstool = automatic_extract(path_to_ndstool=path_to_ndstool)
         
         files = os.listdir('en')
         for file in files:
             patch_file_en(f'{file}')
 
     if mode_manual == False:
-        repack(mode_gender=mode_gender, mode_lang=mode_lang)
+        repack(mode_gender=mode_gender, mode_lang=mode_lang, path_to_ndstool=path_to_ndstool)
 
     # Prologue
     # patch_file_en("b0200000.mpt")
@@ -514,7 +514,7 @@ def patch_file_en(filename):
 
         logging.info(f'Successfully patched file en/{filename}')
 
-def automatic_extract():
+def automatic_extract(path_to_ndstool : str):
     regions = ["us", "ja"]
     roms = {"us" : "none",
             "ja" : "none"}
@@ -530,18 +530,24 @@ def automatic_extract():
     
     ndstool_string = "ndstool 2.1.2"
 
-    #check if ndstool is installed, install it if not
+    #check if ndstool is installed
     ndstool_found = False
-    for possible_path in ["ndstool" , "ndstool/ndstool", "ndstool/ndstool.exe"]:
-        correct_output =  "Nintendo DS rom tool 2.1.2 - Mar  2 2023\\nby Rafael Vuijk, Dave Murphy, Alexei Karpenko"
+    correct_output =  "Nintendo DS rom tool 2.1.2 - Mar  2 2023\\nby Rafael Vuijk, Dave Murphy, Alexei Karpenko"
 
-        ndstool = subprocess.run(path_to_ndstool, shell=True, stdout=subprocess.PIPE)
+    ndstool = subprocess.run(path_to_ndstool, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-        if correct_output in ndstool:
+    if correct_output in str(ndstool.stdout):
+        ndstool_found = True
+
+    for possible_path in ["ndstool/ndstool", "ndstool/ndstool.exe"]:
+        if os.path.exists(possible_path):
             ndstool_found = True
             path_to_ndstool = possible_path
 
+    #if ndstool isn't found, install
     if ndstool_found == False:
+
+        do_not_install_msg = ndstool_string + " is required for automatic installation. Use --manual if you wish to do everything manually."
         
         install = input("Could not find " + ndstool_string + " on your system. Download it? (y/n): ")
         if install in ["", "y", "Y"]:
@@ -549,16 +555,14 @@ def automatic_extract():
             counter = 1
             dl_list = []
             for i in ndstool_links:
-                print("[" + str(counter) + "] : " + i)
+                print("[" + str(counter) + "] " + i)
                 dl_list.append(i)
                 counter += 1
-            
-            selection = " "
-            
+                        
             while(True):
                 selection = input("Select a version [1-" + str(len(dl_list)) + "] (n to cancel): ")
                 if selection in ["n", "N"]:
-                    print(ndstool_string + " is required for automatic installation. ")
+                    print(do_not_install_msg)
                     sys.exit(1)
                 
                 if selection.isdigit:
@@ -589,11 +593,12 @@ def automatic_extract():
 
             path_to_ndstool = "ndstool/" + file_to_extract
 
-            sys.exit(0)
+            if path_to_ndstool.endswith(".exe") == False:
+                subprocess.run("chmod +x ndstool/ndstool", shell=True)
+
         else:
-            print(ndstool_string + " is required for automatic installation. ")
-
-
+            print(do_not_install_msg)
+            sys.exit(1)
 
     #locate the US and JA NDS roms as well as obb file
     for i in os.listdir("roms"):
@@ -610,7 +615,7 @@ def automatic_extract():
     #check if US and JA NDS roms exist
     for i in roms:
         if roms[i] == "none":
-            print("Please provide a " + i + " DQIV rom in the roms folder.")
+            print("Please provide a " + i.upper() + " DQIV rom in the roms folder.")
             sys.exit(1)
 
     #check if obb exists
@@ -624,9 +629,9 @@ def automatic_extract():
         if os.path.exists(path_to_region_folder) == False:
             os.makedirs(path_to_region_folder)
 
-            print("Extracting " + i + " rom...")
-            subprocess.run(path_to_ndstool + " -x " + roms[i] + " -9 " + path_to_region_folder + "/arm9.bin -7 " + path_to_region_folder + "/arm7.bin -y9 " + path_to_region_folder + "/y9.bin -y7 " + path_to_region_folder + "/y7.bin -t " + path_to_region_folder + "/banner.bin -h " + path_to_region_folder + "/header.bin -d " + path_to_region_folder + "/data -y " + path_to_region_folder + "/overlay ", shell=True, stdout=subprocess.PIPE)
-            print("Extraction of " + i + " rom complete.")
+        print("Extracting " + i + " rom...")
+        subprocess.run(path_to_ndstool + " -x " + roms[i] + " -9 " + path_to_region_folder + "/arm9.bin -7 " + path_to_region_folder + "/arm7.bin -y9 " + path_to_region_folder + "/y9.bin -y7 " + path_to_region_folder + "/y7.bin -t " + path_to_region_folder + "/banner.bin -h " + path_to_region_folder + "/header.bin -d " + path_to_region_folder + "/data -y " + path_to_region_folder + "/overlay ", shell=True, stdout=subprocess.PIPE)
+        print("Extraction of " + i + " rom complete.")
 
     #copy the EN NDS mpt files to en
     path_to_en_ds_files = path_to_roms + "/" + \
@@ -647,7 +652,9 @@ def automatic_extract():
     print("Extraction of obb files complete.")
     shutil.rmtree("en/assets")
 
-def repack(mode_lang : str, mode_gender : str):
+    return path_to_ndstool
+
+def repack(mode_lang : str, mode_gender : str, path_to_ndstool: str):
     
     #define path where mpt files will be replaced
     path = path_to_roms + "/" + "repack" + "/data/data/MESS/" + mode_lang
@@ -666,7 +673,7 @@ def repack(mode_lang : str, mode_gender : str):
 
     #repack the rom with ndstool
     print("Repacking rom...")
-    repacking = subprocess.run(path_to_ndstool + " -c \"" + "Dragon Quest IV Party Chat Patched [" + "gender=" + mode_gender + " mode_lang=" + mode_lang + ".nds\"" + " -9 " + path_to_repack + "/arm9.bin -7 " + path_to_repack + "/arm7.bin -y9 " + path_to_repack + "/y9.bin -y7 " +
+    repacking = subprocess.run(path_to_ndstool + " -c \"out/" + "Dragon Quest IV Party Chat Patched [" + "gender=" + mode_gender + " mode_lang=" + mode_lang + "].nds\"" + " -9 " + path_to_repack + "/arm9.bin -7 " + path_to_repack + "/arm7.bin -y9 " + path_to_repack + "/y9.bin -y7 " +
                    path_to_repack + "/y7.bin -t " + path_to_repack + "/banner.bin -h " + path_to_repack + "/header.bin -d " + path_to_repack + "/data -y " + path_to_repack + "/overlay ", shell=True, stdout=subprocess.PIPE)
     print("Rom repacked!")
 
