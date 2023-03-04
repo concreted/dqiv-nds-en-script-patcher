@@ -46,7 +46,7 @@ def main():
         patch_file_en(args.file)
     else:
         if mode_manual == False:
-            path_to_ndstool = automatic_extract(path_to_ndstool=path_to_ndstool)
+            path_to_ndstool = automatic_extract()
         
         files = os.listdir('en')
         for file in files:
@@ -514,11 +514,12 @@ def patch_file_en(filename):
 
         logging.info(f'Successfully patched file en/{filename}')
 
-def automatic_extract(path_to_ndstool : str):
+def automatic_extract():
     regions = ["us", "ja"]
     roms = {"us" : "none",
             "ja" : "none"}
     obb = "none"
+    path_to_ndstool = "ndstool"
 
     ndstool_links = {"linux aarch64" : "https://github.com/fenwaypowers/ndstool/releases/download/2.1.2/ndstool-2.1.2-linux_aarch64.zip",
                      "linux x86_64" : "https://github.com/fenwaypowers/ndstool/releases/download/2.1.2/ndstool-2.1.2-1-linux_x86_64.zip",
@@ -538,11 +539,14 @@ def automatic_extract(path_to_ndstool : str):
 
     if correct_output in str(ndstool.stdout):
         ndstool_found = True
-
-    for possible_path in ["ndstool/ndstool", "ndstool/ndstool.exe"]:
-        if os.path.exists(possible_path):
-            ndstool_found = True
-            path_to_ndstool = possible_path
+    else:
+        for possible_path in ["ndstool/ndstool", "ndstool/ndstool.exe"]:
+            if os.path.exists(possible_path):
+                ndstool_found = True
+                if possible_path.endswith(".exe"):
+                    path_to_ndstool = "ndstool\\ndstool.exe"
+                else:
+                    path_to_ndstool = possible_path
 
     #if ndstool isn't found, install
     if ndstool_found == False:
@@ -587,14 +591,14 @@ def automatic_extract(path_to_ndstool : str):
                 with ZipFile("ndstool/ndstool.zip", 'r') as zObject:
                     zObject.extract(file_to_extract, path="ndstool/")
 
-                os.remove("ndstool/ndstool.zip")
-
                 print("ndstool downloaded.")
 
-            path_to_ndstool = "ndstool/" + file_to_extract
 
-            if path_to_ndstool.endswith(".exe") == False:
-                subprocess.run("chmod +x ndstool/ndstool", shell=True)
+            if path_to_ndstool.endswith(".exe"):
+                path_to_ndstool = "ndstool\\" + file_to_extract
+            else:
+                path_to_ndstool = "ndstool/" + file_to_extract
+                subprocess.run("chmod +x ndstool/ndstool", shell=True)               
 
         else:
             print(do_not_install_msg)
@@ -679,6 +683,9 @@ def repack(mode_lang : str, mode_gender : str, path_to_ndstool: str):
 
     #remove the repack folder
     shutil.rmtree(path_to_repack)
+
+    if os.path.exists("nodstool/ndstool.zip"):
+        os.remove("ndstool/ndstool.zip")
 
 if __name__ == "__main__":
     main()
