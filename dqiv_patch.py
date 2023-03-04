@@ -594,7 +594,7 @@ def automatic_extract():
                 print("ndstool downloaded.")
 
 
-            if path_to_ndstool.endswith(".exe"):
+            if file_to_extract.endswith(".exe"):
                 path_to_ndstool = "ndstool\\" + file_to_extract
             else:
                 path_to_ndstool = "ndstool/" + file_to_extract
