@@ -2,6 +2,7 @@ out
 *.mpt
 roms/ja
 roms/us
+roms/repack
 *.nds
 *.obb
 test.py

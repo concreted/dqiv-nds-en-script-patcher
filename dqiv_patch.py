@@ -1,6 +1,4 @@
-import os, shutil, argparse, logging, sys
-
-import subprocess
+import os, shutil, argparse, logging, sys, subprocess
 from zipfile import ZipFile
 
 logging.basicConfig(format='%(message)s', stream=sys.stdout, level=logging.INFO)
@@ -10,7 +8,6 @@ mode_lang = 'en'
 
 path_to_ndstool = "ndstool"
 path_to_roms = "roms"
-
 
 def main():
     global mode_gender
@@ -586,7 +583,7 @@ def repack(mode_lang : str, mode_gender : str):
     #define path where mpt files will be replaced
     path = path_to_roms + "/" + "repack" + "/data/data/MESS/" + mode_lang
 
-    #create a copy of the extract JA NDS rom folder called repack
+    #create a copy of the extracted JA NDS rom folder called repack
     shutil.copytree(path_to_roms + "/" + "ja", path_to_roms + "/" + "repack")
     path_to_repack = path_to_roms + "/" + "repack"
 
@@ -609,3 +606,4 @@ def repack(mode_lang : str, mode_gender : str):
 
 if __name__ == "__main__":
     main()
+    
