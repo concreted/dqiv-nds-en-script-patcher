@@ -16,7 +16,28 @@ One potential approach that could provide an even better experience would be to 
 
 Tools:
 - Python 3
-- dslazy (https://www.romhacking.net/utilities/793/)
+- [ndstool](https://github.com/fenwaypowers/ndstool) or [dslazy](https://www.romhacking.net/utilities/793/)
+
+Files:
+- Nintendo DS Japan DQIV ROM
+- Nintendo DS US DQIV ROM
+- Android DQIV OBB 
+
+## Quick Start
+1. Put your Japan DQIV ROM in the `roms` folder.
+2. Put your US DQIV ROM in the `roms` folder.
+3. Put your Android DQIV OBB in the `roms` folder.
+4. Run `python3 dqiv_patch.py`
+5. If you do not have ndstool installed, the program will prompt you to download it.
+6. Wait for the process to finish.
+
+You have now generated a JA ROM with patched English script which includes party chat. This ROM will still use Japanese text by default, but can be switched to English with the Action Replay code `02106404 00000001`.
+
+For more arguments such as gender and language mode, see the `Arguments` section.
+
+If you are having problems with the automatic extractor/repacker, then you can alternatively use `--manual` to skip these functionalities. Learn more in the next section.
+
+## Manual Extraction and Repacking with dslazy
 
 Files:
 - Nintendo DS Japan DQIV ROM
@@ -25,30 +46,27 @@ Files:
     - An alternative is to use the same files from the Japan ROM. The US ROM contains updated script files that fixes some formatting issues (menu options are better named) and is preferred, but the Japan ROM files should work fine.
 - From Android DQIV OBB: English Party Chat `.mpt` files - `b0500000.mpt` to `b0552000.mpt` (46 files total), located in `com.square_enix.android_googleplay.dq4/main.11100.com.square_enix.android_googleplay.dq4.obb/assets/msg/en`
     - After installing the Android DQIV app, you should be able to find the OBB by mounting your phone as a USB storage device and navigating to `Android/obb`. `.obb` files are basically zip files and can be extracted with any zip utility. You can rename the `.obb` file and change the extension to `.zip` to make extraction easier.
-    - The Android OBB also includes the other non-party-chat `en` script files that may work instead of the US ROM files. However I ran into blackscreen issues when using these files on the JA ROM, so prefer using the NDS ones. YMMV 
-
-## Quick Start
+    - The Android OBB also includes the other non-party-chat `en` script files that may work instead of the US ROM files. However I ran into blackscreen issues when using these files on the JA ROM, so prefer using the NDS ones. YMMV
 
 1. Download this patch tool by going to https://github.com/concreted/dqiv-nds-en-script-patcher/releases and downloading the latest version and unzip it. You can also clone this repo or download the repo as a zip.
-1. Make sure there is an empty folder named `en` in the same directory as the `dqiv_patch.py` script file. If you cloned this repo/downloaded as a zip it should already be present, but if not create it.
-1. Copy NDS US ROM `.mpt` files from the unpacked folder to the `en` directory. 
-1. Copy Android OBB party chat `.mpt` files to the `en` directory
-1. Run `python dqiv_patch.py`
-1. Find output files in `out` directory. 
-1. Load the JA ROM in dslazy and unpack it. Copy the contents of `out` to `<dslazy_directory>/NDS_UNPACK/data/data/mess`, replacing the folder of the same name (`en` if you ran with default settings).
-1. Pack the ROM in dslazy. 
+2. Make sure there is an empty folder named `en` in the same directory as the `dqiv_patch.py` script file. If you cloned this repo/downloaded as a zip it should already be present, but if not create it.
+3. Copy NDS US ROM `.mpt` files from the unpacked folder to the `en` directory. 
+4. Copy Android OBB party chat `.mpt` files to the `en` directory
+5. Run `python dqiv_patch.py --manual`
+6. Find output files in `out` directory. 
+7. Load the JA ROM in dslazy and unpack it. Copy the contents of `out` to `<dslazy_directory>/NDS_UNPACK/data/data/mess`, replacing the folder of the same name (`en` if you ran with default settings).
+8. Pack the ROM in dslazy. 
 
-You have now generated a JA ROM with patched English script which includes party chat. This ROM will still use Japanese text by default, but can be switched to English with the Action Replay code `02106404 00000001`.
+## Arguments
+There are several command line arguments available, run `python dqiv_patch.py -h` to see documentation. For example you can run the script with `--gender m` to generate a script with male gender pronouns, `--gender f` for female pronouns, or `--gender b` to include both.
 
-Alternatively, you can run `python dqiv_patch.py --lang ja` to generate a `ja` output folder. Copy this to the `<dslazy_directory>/NDS_UNPACK/data/data/mess` directory, replacing the `ja` folder, and pack the ROM is dslazy. This ROM will show the English script without requiring an Action Replay code. This version adds speaker names to the actual text - this is because the `ja` language mode does not show speaker names floating above the text box, instead expecting them to be in the actual text.
+Alternatively, you can run `python dqiv_patch.py --lang ja` to generate a `ja` output folder. If you are not using the automatic extractor/repacker, copy this to the `<dslazy_directory>/NDS_UNPACK/data/data/mess` directory, replacing the `ja` folder, and pack the ROM with dslazy. This ROM will show the English script without requiring an Action Replay code. This version adds speaker names to the actual text - this is because the `ja` language mode does not show speaker names floating above the text box, instead expecting them to be in the actual text.
 
 `en` language mode:  
 ![Party Chat](screenshots/en_nametags.png)
 
 `ja` language mode:  
 ![Party Chat](screenshots/jp_nametags.png)
-
-There are several command line arguments available, run `python dqiv_patch.py -h` to see documentation. For example you can run the script with `--gender m` to generate a script with male gender pronouns, `--gender f` for female pronouns, or `--gender b` to include both.
 
 ## Comparison Screenshots
 

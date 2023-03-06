@@ -13,7 +13,7 @@ def main():
     global mode_lang
 
     parser = argparse.ArgumentParser(description='Patch English script files for JP Dragon Quest IV ROM.')
-    parser.add_argument('--file', help='File to be patched. must be present in the ./en directory. disables automatic extracting and repacking.', default=None)
+    parser.add_argument('--file', help='File to be patched. must be present in the ./en directory. Disables automatic extracting and repacking.', default=None)
     parser.add_argument('--gender', help='[(n)|m|f|b] player character gender. options are neutral, male, female, both', default='n')
     parser.add_argument('--lang', help='[(en)|ja] rom language mode to target. en uses nametags, ja embeds the speaker name in text', default='en')
     parser.add_argument('--debug', dest='debug', action='store_true', help='Enable debug logs')
