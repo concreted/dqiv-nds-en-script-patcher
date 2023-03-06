@@ -17,6 +17,7 @@ One potential approach that could provide an even better experience would be to 
 Tools:
 - Python 3
 - [ndstool](https://github.com/fenwaypowers/ndstool) or [dslazy](https://www.romhacking.net/utilities/793/)
+- [requests](https://pypi.org/project/requests/)
 
 Files:
 - Nintendo DS Japan DQIV ROM
@@ -24,12 +25,13 @@ Files:
 - Android DQIV OBB 
 
 ## Quick Start
-1. Put your Japan DQIV ROM in the `roms` folder.
-2. Put your US DQIV ROM in the `roms` folder.
-3. Put your Android DQIV OBB in the `roms` folder.
-4. Run `python3 dqiv_patch.py`
-5. If you do not have ndstool installed, the program will prompt you to download it.
-6. Wait for the process to finish.
+1. Run `python3 -m pip install -r requirements.txt`
+2. Put your Japan DQIV ROM in the `roms` folder.
+3. Put your US DQIV ROM in the `roms` folder.
+4. Put your Android DQIV OBB in the `roms` folder.
+5. Run `python3 dqiv_patch.py`
+6. If you do not have ndstool installed, the program will prompt you to download it.
+7. Wait for the process to finish.
 
 You have now generated a JA ROM with patched English script which includes party chat. This ROM will still use Japanese text by default, but can be switched to English with the Action Replay code `02106404 00000001`.
 
