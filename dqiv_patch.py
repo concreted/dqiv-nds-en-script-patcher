@@ -607,6 +607,9 @@ def automatic_extract_repack():
     for mpt in extractedmptlist:
         if os.path.exists(mpt) == False:
             must_extract = True
+
+    if os.path.exists("roms/ja") == False:
+        must_extract = True
     
     #extract files if they're not already in en
     if must_extract:
