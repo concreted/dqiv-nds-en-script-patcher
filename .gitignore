@@ -7,3 +7,4 @@ roms/repack
 *.obb
 test.py
 ndstool
+patched

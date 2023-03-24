@@ -731,9 +731,12 @@ def repack(mode_lang: str, mode_gender: str, path_to_ndstool: str):
 
     path_to_repack = path_to_roms + "/" + "repack"
 
+    if not os.path.exists("patched"):
+        os.mkdir("patched")
+
     # Repack the rom with ndstool
     print("Repacking rom...")
-    repacking = subprocess.run(path_to_ndstool + " -c \"out/" + "Dragon Quest IV Party Chat Patched [" + "gender=" + mode_gender + " mode_lang=" + mode_lang + "].nds\"" + " -9 " + path_to_repack + "/arm9.bin -7 " + path_to_repack + "/arm7.bin -y9 " + path_to_repack + "/y9.bin -y7 " +
+    repacking = subprocess.run(path_to_ndstool + " -c \"patched/" + "Dragon Quest IV Party Chat Patched [" + "gender=" + mode_gender + " mode_lang=" + mode_lang + "].nds\"" + " -9 " + path_to_repack + "/arm9.bin -7 " + path_to_repack + "/arm7.bin -y9 " + path_to_repack + "/y9.bin -y7 " +
                    path_to_repack + "/y7.bin -t " + path_to_repack + "/banner.bin -h " + path_to_repack + "/header.bin -d " + path_to_repack + "/data -y " + path_to_repack + "/overlay ", shell=True, stdout=subprocess.PIPE)
     print("Rom repacked!")
 
