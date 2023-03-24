@@ -599,52 +599,70 @@ def automatic_extract_repack():
             print(do_not_install_msg)
             sys.exit(1)
 
-    # Check if mpt's have already been extracted
-    must_extract = False
-    extractedmptlist = ['en/b0000000.mpt', 'en/b0001000.mpt', 'en/b0002000.mpt', 'en/b0003000.mpt', 'en/b0004000.mpt', 'en/b0005000.mpt', 'en/b0006000.mpt', 'en/b0007000.mpt', 'en/b0008000.mpt', 'en/b0009000.mpt', 'en/b0010000.mpt', 'en/b0011000.mpt', 'en/b0012000.mpt', 'en/b0014000.mpt', 'en/b0015000.mpt', 'en/b0016000.mpt', 'en/b0017000.mpt', 'en/b0018000.mpt', 'en/b0019000.mpt', 'en/b0025000.mpt', 'en/b0026000.mpt', 'en/b0027000.mpt', 'en/b0028000.mpt', 'en/b0029000.mpt', 'en/b0030000.mpt', 'en/b0031000.mpt', 'en/b0032000.mpt', 'en/b0033000.mpt', 'en/b0034000.mpt', 'en/b0035000.mpt', 'en/b0037000.mpt', 'en/b0038000.mpt', 'en/b0039000.mpt', 'en/b0040000.mpt', 'en/b0045000.mpt', 'en/b0046000.mpt', 'en/b0047000.mpt', 'en/b0049000.mpt', 'en/b0050000.mpt', 'en/b0051000.mpt', 'en/b0053000.mpt', 'en/b0054000.mpt', 'en/b0055000.mpt', 'en/b0065000.mpt', 'en/b0066000.mpt', 'en/b0067000.mpt', 'en/b0069000.mpt', 'en/b0070000.mpt', 'en/b0071000.mpt', 'en/b0072000.mpt', 'en/b0073000.mpt', 'en/b0075000.mpt', 'en/b0076000.mpt', 'en/b0077000.mpt', 'en/b0079000.mpt', 'en/b0080000.mpt', 'en/b0081000.mpt', 'en/b0082000.mpt', 'en/b0083000.mpt', 'en/b0084000.mpt', 'en/b0085000.mpt', 'en/b0086000.mpt', 'en/b0087000.mpt', 'en/b0088000.mpt', 'en/b0090000.mpt', 'en/b0091000.mpt', 'en/b0093000.mpt', 'en/b0094000.mpt', 'en/b0095000.mpt', 'en/b0096000.mpt', 'en/b0097000.mpt', 'en/b0098000.mpt', 'en/b0099000.mpt', 'en/b0100000.mpt', 'en/b0101000.mpt', 'en/b0102000.mpt', 'en/b0103000.mpt', 'en/b0104000.mpt', 'en/b0105000.mpt', 'en/b0106000.mpt', 'en/b0107000.mpt', 'en/b0109000.mpt', 'en/b0110000.mpt', 'en/b0112000.mpt', 'en/b0113000.mpt', 'en/b0115000.mpt', 'en/b0116000.mpt', 'en/b0118000.mpt', 'en/b0119000.mpt', 'en/b0120000.mpt', 'en/b0121000.mpt', 'en/b0122000.mpt', 'en/b0123000.mpt', 'en/b0124000.mpt', 'en/b0125000.mpt', 'en/b0126000.mpt', 'en/b0127000.mpt', 'en/b0128000.mpt', 'en/b0129000.mpt', 'en/b0130000.mpt', 'en/b0145000.mpt', 'en/b0146000.mpt', 'en/b0148000.mpt', 'en/b0149000.mpt', 'en/b0150000.mpt', 'en/b0151000.mpt', 'en/b0152000.mpt', 'en/b0153000.mpt', 'en/b0154000.mpt', 'en/b0155000.mpt', 'en/b0156000.mpt', 'en/b0157000.mpt', 'en/b0200000.mpt', 'en/b0500000.mpt', 'en/b0501000.mpt', 'en/b0502000.mpt', 'en/b0503000.mpt', 'en/b0504000.mpt', 'en/b0505000.mpt', 'en/b0506000.mpt', 'en/b0507000.mpt', 'en/b0508000.mpt', 'en/b0509000.mpt', 'en/b0512000.mpt', 'en/b0513000.mpt', 'en/b0516000.mpt', 'en/b0517000.mpt', 'en/b0520000.mpt', 'en/b0521000.mpt', 'en/b0522000.mpt', 'en/b0523000.mpt', 'en/b0524000.mpt', 'en/b0525000.mpt', 'en/b0526000.mpt', 'en/b0527000.mpt', 'en/b0528000.mpt', 'en/b0529000.mpt', 'en/b0530000.mpt', 'en/b0531000.mpt', 'en/b0532000.mpt', 'en/b0533000.mpt', 'en/b0534000.mpt', 'en/b0535000.mpt', 'en/b0536000.mpt', 'en/b0537000.mpt', 'en/b0538000.mpt', 'en/b0539000.mpt', 'en/b0540000.mpt', 'en/b0541000.mpt', 'en/b0542000.mpt', 'en/b0543000.mpt', 'en/b0544000.mpt', 'en/b0545000.mpt', 'en/b0547000.mpt', 'en/b0548000.mpt', 'en/b0549000.mpt', 'en/b0550000.mpt', 'en/b0551000.mpt', 'en/b0552000.mpt', 'en/b0600000.mpt', 'en/b0601000.mpt', 'en/b0602000.mpt', 'en/b0606000.mpt', 'en/b0801000.mpt', 'en/b0802000.mpt', 'en/b0803000.mpt', 'en/b0804000.mpt', 'en/b0805000.mpt', 'en/b0806000.mpt', 'en/b0807000.mpt', 'en/b0808000.mpt', 'en/b0810000.mpt', 'en/b0811000.mpt', 'en/b0812000.mpt', 'en/b0813000.mpt', 'en/b0814000.mpt', 'en/b0815000.mpt', 'en/b0816000.mpt', 'en/b0820000.mpt', 'en/b0821000.mpt', 'en/b0822000.mpt', 'en/b0823000.mpt', 'en/b0824000.mpt', 'en/b0825000.mpt', 'en/b0830000.mpt', 'en/b0831000.mpt', 'en/b0832000.mpt', 'en/b0833000.mpt', 'en/b0834000.mpt', 'en/b0901000.mpt', 'en/b1000000.mpt', 'en/b1001000.mpt', 'en/b1002000.mpt', 'en/b1003000.mpt', 'en/b1004000.mpt', 'en/b1005000.mpt', 'en/b1006000.mpt', 'en/b1007000.mpt', 'en/b1010000.mpt']
-    for mpt in extractedmptlist:
-        if not os.path.exists(mpt):
-            must_extract = True
-
-    if not os.path.exists("roms/ja"):
-        must_extract = True
+    # Check if en folder is missing us nds mpt files
+    us_nds_mptlist = ['b0000000.mpt', 'b0001000.mpt', 'b0002000.mpt', 'b0003000.mpt', 'b0004000.mpt', 'b0005000.mpt', 'b0006000.mpt', 'b0007000.mpt', 'b0008000.mpt', 'b0009000.mpt', 'b0010000.mpt', 'b0011000.mpt', 'b0012000.mpt', 'b0014000.mpt', 'b0015000.mpt', 'b0016000.mpt', 'b0017000.mpt', 'b0018000.mpt', 'b0019000.mpt', 'b0025000.mpt', 'b0026000.mpt', 'b0027000.mpt', 'b0028000.mpt', 'b0029000.mpt', 'b0030000.mpt', 'b0031000.mpt', 'b0032000.mpt', 'b0033000.mpt', 'b0034000.mpt', 'b0035000.mpt', 'b0037000.mpt', 'b0038000.mpt', 'b0039000.mpt', 'b0040000.mpt', 'b0045000.mpt', 'b0046000.mpt', 'b0047000.mpt', 'b0049000.mpt', 'b0050000.mpt', 'b0051000.mpt', 'b0053000.mpt', 'b0054000.mpt', 'b0055000.mpt', 'b0065000.mpt', 'b0066000.mpt', 'b0067000.mpt', 'b0069000.mpt', 'b0070000.mpt', 'b0071000.mpt', 'b0072000.mpt', 'b0073000.mpt', 'b0075000.mpt', 'b0076000.mpt', 'b0077000.mpt', 'b0079000.mpt', 'b0080000.mpt', 'b0081000.mpt', 'b0082000.mpt', 'b0083000.mpt', 'b0084000.mpt', 'b0085000.mpt', 'b0086000.mpt', 'b0087000.mpt', 'b0088000.mpt', 'b0090000.mpt', 'b0091000.mpt', 'b0093000.mpt', 'b0094000.mpt', 'b0095000.mpt', 'b0096000.mpt', 'b0097000.mpt', 'b0098000.mpt', 'b0099000.mpt', 'b0100000.mpt', 'b0101000.mpt', 'b0102000.mpt', 'b0103000.mpt', 'b0104000.mpt', 'b0105000.mpt', 'b0106000.mpt', 'b0107000.mpt', 'b0109000.mpt', 'b0110000.mpt', 'b0112000.mpt', 'b0113000.mpt', 'b0115000.mpt', 'b0116000.mpt', 'b0118000.mpt', 'b0119000.mpt', 'b0120000.mpt', 'b0121000.mpt', 'b0122000.mpt', 'b0123000.mpt', 'b0124000.mpt', 'b0125000.mpt', 'b0126000.mpt', 'b0127000.mpt', 'b0128000.mpt', 'b0129000.mpt', 'b0130000.mpt', 'b0145000.mpt', 'b0146000.mpt', 'b0148000.mpt', 'b0149000.mpt', 'b0150000.mpt', 'b0151000.mpt', 'b0152000.mpt', 'b0153000.mpt', 'b0154000.mpt', 'b0155000.mpt', 'b0156000.mpt', 'b0157000.mpt', 'b0200000.mpt', 'b0600000.mpt', 'b0601000.mpt', 'b0602000.mpt', 'b0606000.mpt', 'b0801000.mpt', 'b0802000.mpt', 'b0803000.mpt', 'b0804000.mpt', 'b0805000.mpt', 'b0806000.mpt', 'b0807000.mpt', 'b0808000.mpt', 'b0810000.mpt', 'b0811000.mpt', 'b0812000.mpt', 'b0813000.mpt', 'b0814000.mpt', 'b0815000.mpt', 'b0816000.mpt', 'b0820000.mpt', 'b0821000.mpt', 'b0822000.mpt', 'b0823000.mpt', 'b0824000.mpt', 'b0825000.mpt', 'b0830000.mpt', 'b0831000.mpt', 'b0832000.mpt', 'b0833000.mpt', 'b0834000.mpt', 'b0901000.mpt', 'b1000000.mpt', 'b1001000.mpt', 'b1002000.mpt', 'b1003000.mpt', 'b1004000.mpt', 'b1005000.mpt', 'b1006000.mpt', 'b1007000.mpt', 'b1010000.mpt']
+    move_mpt_files = False
+    for nds_mpt in us_nds_mptlist:
+        if not os.path.exists("en/" + nds_mpt):
+            move_mpt_files = True
     
-    # Extract files if they're not already in en
-    if must_extract:
-        extract(path_to_ndstool=path_to_ndstool)
+    path_to_us_nds_files = "roms/" + "us" + "/data/data/MESS/en"
+
+    # Check if US rom needs to be extraced
+    extract_us_rom = False
+    for nds_mpt in us_nds_mptlist:
+        if not os.path.exists(path_to_us_nds_files + "/" + nds_mpt):
+            extract_us_rom = True
+    
+    # Extract JA and possibly US rom
+    extract_roms(path_to_ndstool, extract_us_rom)
+
+    # Move US NDS mpt files from extracted folder to en
+    if move_mpt_files:
+        move_nds_mpt()
+    
+    # Check if obb mpt files need to be extraced
+    obb_mpt_list = ['assets/msg/en/b0500000.mpt', 'assets/msg/en/b0501000.mpt', 'assets/msg/en/b0502000.mpt', 'assets/msg/en/b0503000.mpt', 'assets/msg/en/b0504000.mpt', 'assets/msg/en/b0505000.mpt', 'assets/msg/en/b0506000.mpt', 'assets/msg/en/b0507000.mpt', 'assets/msg/en/b0508000.mpt', 'assets/msg/en/b0509000.mpt', 'assets/msg/en/b0512000.mpt', 'assets/msg/en/b0513000.mpt', 'assets/msg/en/b0516000.mpt', 'assets/msg/en/b0517000.mpt', 'assets/msg/en/b0520000.mpt', 'assets/msg/en/b0521000.mpt', 'assets/msg/en/b0522000.mpt', 'assets/msg/en/b0523000.mpt', 'assets/msg/en/b0524000.mpt', 'assets/msg/en/b0525000.mpt', 'assets/msg/en/b0526000.mpt', 'assets/msg/en/b0527000.mpt', 'assets/msg/en/b0528000.mpt',
+            'assets/msg/en/b0529000.mpt', 'assets/msg/en/b0530000.mpt', 'assets/msg/en/b0531000.mpt', 'assets/msg/en/b0532000.mpt', 'assets/msg/en/b0533000.mpt', 'assets/msg/en/b0534000.mpt', 'assets/msg/en/b0535000.mpt', 'assets/msg/en/b0536000.mpt', 'assets/msg/en/b0537000.mpt', 'assets/msg/en/b0538000.mpt', 'assets/msg/en/b0539000.mpt', 'assets/msg/en/b0540000.mpt', 'assets/msg/en/b0541000.mpt', 'assets/msg/en/b0542000.mpt', 'assets/msg/en/b0543000.mpt', 'assets/msg/en/b0544000.mpt', 'assets/msg/en/b0545000.mpt', 'assets/msg/en/b0547000.mpt', 'assets/msg/en/b0548000.mpt', 'assets/msg/en/b0549000.mpt', 'assets/msg/en/b0550000.mpt', 'assets/msg/en/b0551000.mpt', 'assets/msg/en/b0552000.mpt']
+    extract_obb_ = False
+    for obb in obb_mpt_list:
+        if not os.path.exists(obb.split("assets/msg/")[1]):
+            extract_obb_ = True
+    
+    # Extract the obb mpt files
+    if extract_obb_:
+        extract_obb()
 
     return path_to_ndstool
 
-def extract(path_to_ndstool: str):
-    regions = ["us", "ja"]
+def extract_roms(path_to_ndstool: str, extract_us: bool):
+    regions = []
     roms = {"us" : "none",
             "ja" : "none"}
-    obb = "none"
 
-    # Locate the US and JA NDS roms as well as obb file
     for r in os.listdir("roms"):
         if r.endswith(".nds"):
             rom = subprocess.run(path_to_ndstool + " -i " + path_to_roms + "/" + r, shell=True, stdout=subprocess.PIPE)
 
-            if "YIVE (NTR-YIVE-USA)" in str(rom.stdout):
+            if "YIVE (NTR-YIVE-USA)" in str(rom.stdout) and extract_us:
                 roms["us"] = path_to_roms + "/" + r
             elif "YIVJ (NTR-YIVJ-JPN)" in str(rom.stdout):
                 roms["ja"] = path_to_roms + "/" + r
-        elif r.endswith(".obb"):
-            obb = r
 
-    # Check if US and JA NDS roms exist
-    for t in roms:
-        if roms[t] == "none":
-            print("Please provide a " + t.upper() + " DQIV rom in the roms folder.")
-            sys.exit(1)
-
-    # Check if obb exists
-    if obb == "none":
-        print("Please provide a DQIV android .obb file in the roms folder.")
+    if roms["us"] == "none" and extract_us:
+        print("Please provide a US DQIV rom in the roms folder.")
         sys.exit(1)
+    
+    if roms["us"] != "none":
+        regions.append("us")
 
-    # Extract the US and JA NDS roms.
+    if roms["ja"] == "none":
+        print("Please provide a JA DQIV rom in the roms folder.")
+        sys.exit(1)
+    else:
+        regions.append("ja")
+    
+    # Extract JA/US roms
     for region in regions:
         path_to_region_folder = path_to_roms + "/" + region
         if not os.path.exists(path_to_region_folder):
@@ -653,12 +671,28 @@ def extract(path_to_ndstool: str):
         print("Extracting " + region + " rom...")
         subprocess.run(path_to_ndstool + " -x " + roms[region] + " -9 " + path_to_region_folder + "/arm9.bin -7 " + path_to_region_folder + "/arm7.bin -y9 " + path_to_region_folder + "/y9.bin -y7 " + path_to_region_folder + "/y7.bin -t " + path_to_region_folder + "/banner.bin -h " + path_to_region_folder + "/header.bin -d " + path_to_region_folder + "/data -y " + path_to_region_folder + "/overlay ", shell=True, stdout=subprocess.PIPE)
         print("Extraction of " + region + " rom complete.")
-
-    # Copy the EN NDS mpt files to en
-    path_to_en_ds_files = path_to_roms + "/" + \
-    "us" + "/data/data/MESS/en"
+    
+def move_nds_mpt():
+    # Copy the US NDS mpt files to en
+    path_to_en_ds_files = path_to_roms + "/" + "us" + "/data/data/MESS/en"
     for f in os.listdir(path_to_en_ds_files):
-        shutil.copy(path_to_en_ds_files + "/" + f, "en/" + f)
+        try:
+            shutil.copy(path_to_en_ds_files + "/" + f, "en/" + f)
+        except:
+            print("File en/" + f + " already exists. Skipping copying the file.")
+
+def extract_obb():
+    obb = "none"
+
+    # Locate the US and JA NDS roms as well as obb file
+    for r in os.listdir("roms"):
+        if r.endswith(".obb"):
+            obb = r
+
+    # Check if obb exists
+    if obb == "none":
+        print("Please provide a DQIV android .obb file in the roms folder.")
+        sys.exit(1)
 
     # List of mpts to extract from the obb
     mpt_list = ['assets/msg/en/b0500000.mpt', 'assets/msg/en/b0501000.mpt', 'assets/msg/en/b0502000.mpt', 'assets/msg/en/b0503000.mpt', 'assets/msg/en/b0504000.mpt', 'assets/msg/en/b0505000.mpt', 'assets/msg/en/b0506000.mpt', 'assets/msg/en/b0507000.mpt', 'assets/msg/en/b0508000.mpt', 'assets/msg/en/b0509000.mpt', 'assets/msg/en/b0512000.mpt', 'assets/msg/en/b0513000.mpt', 'assets/msg/en/b0516000.mpt', 'assets/msg/en/b0517000.mpt', 'assets/msg/en/b0520000.mpt', 'assets/msg/en/b0521000.mpt', 'assets/msg/en/b0522000.mpt', 'assets/msg/en/b0523000.mpt', 'assets/msg/en/b0524000.mpt', 'assets/msg/en/b0525000.mpt', 'assets/msg/en/b0526000.mpt', 'assets/msg/en/b0527000.mpt', 'assets/msg/en/b0528000.mpt',
@@ -672,7 +706,7 @@ def extract(path_to_ndstool: str):
             try:
                 os.rename("en/" + mpt, "en/" + mpt.split("assets/msg/en/")[1])
             except:
-                pass
+                print("File en/" + mpt + "already exists. Skipping copying the file...")
     print("Extraction of obb files complete.")
     shutil.rmtree("en/assets")
 
@@ -680,6 +714,10 @@ def repack(mode_lang: str, mode_gender: str, path_to_ndstool: str):
     
     # Define path where mpt files will be replaced
     path = path_to_roms + "/" + "repack" + "/data/data/MESS/" + mode_lang
+
+    # Remove repack folder if it exists
+    if os.path.exists(path_to_roms + "/repack"):
+        shutil.rmtree(path_to_roms + "/repack")
 
     # Create a copy of the extracted JA NDS rom folder called repack
     shutil.copytree(path_to_roms + "/" + "ja", path_to_roms + "/" + "repack")
@@ -689,10 +727,7 @@ def repack(mode_lang: str, mode_gender: str, path_to_ndstool: str):
     for i in os.listdir(path):
         os.remove(path + "/" + i)
     for j in os.listdir("out/" + mode_lang):
-        try:
-            os.rename("out/" + mode_lang + "/" + j, path + "/" + j)
-        except:
-            pass
+        os.rename("out/" + mode_lang + "/" + j, path + "/" + j)
 
     path_to_repack = path_to_roms + "/" + "repack"
 
