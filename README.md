@@ -15,7 +15,7 @@ One potential approach that could provide an even better experience would be to 
 ## Prerequisites
 
 Tools:
-- Python 3
+- [Python 3](https://python.org)
 - [ndstool](https://github.com/fenwaypowers/ndstool) or [dslazy](https://www.romhacking.net/utilities/793/)
 - [requests](https://pypi.org/project/requests/)
 
